@@ -7,10 +7,11 @@
 	hooksPath = /Users/justin/workspace/git-hooks-core
 [alias]
 	co = checkout
+	cob = checkout -b
+	com = checkout master
 	ec = config --global -e
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
-	cob = checkout -b
-	cm = !git add -A && git commit -m
+	ac = !git add -A && git commit -m
 	save = !git add -A && git commit -m 'SAVEPOINT'
 	wip = !git add -u && git commit -m "WIP"
 	undo = reset HEAD~1 --mixed
@@ -37,6 +38,10 @@
 	amendit = commit --amend --no-edit
 	unstage = reset HEAD
 	rum = rebase master@{u}
+	contrib = shortlog -e --summary --numbered
+	pushup = !git push -u origin HEAD
+	start = !git com && git pull && git cob
+	done = !git pull && git merge --no-ff --no-commit
 [pull]
 	rebase = true
 [branch]
@@ -55,5 +60,6 @@
 	prompt = false
 [mergetool]
 	prompt = false
+	keepBackup = false
 [http]
 	postBuffer = 524288000
