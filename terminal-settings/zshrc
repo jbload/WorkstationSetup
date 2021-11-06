@@ -254,8 +254,8 @@ $(ssh_info)%{$fg[magenta]%}%~%u $(git_info)
 
 eval "$(rbenv init -)"
 
-if [ ! -f ./.zshrc-machine-specific ]; then
-    . ./.zshrc-machine-specific
+if [ -f ~/.zshrc-machine-specific ]; then
+    . ~/.zshrc-machine-specific
 fi
 
 clear
