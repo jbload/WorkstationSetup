@@ -256,8 +256,6 @@ PS1='
 $(ssh_info)%{$fg[magenta]%}%~%u $(git_info)
 %(?.%{$fg[blue]%}.%{$fg[red]%})%(!.#.$)%{$reset_color%} '
 
-eval "$(rbenv init -)"
-
 if [ -f ~/.zshrc-machine-specific ]; then
     . ~/.zshrc-machine-specific
 fi
