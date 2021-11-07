@@ -64,18 +64,17 @@ if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash
 fi
 
-kubectl_path=$(which kubectl)
-if [ -f $kubectl_path ]; then
+
+if command -v kubectl version &> /dev/null; then
     . <(kubectl completion bash)
     complete -F __start_kubectl k
 fi	
-unset kubectl_path
 
-terraform_path=$(which terraform)
-if [ -f $terraform_path ]; then
+if command -v terraform version &> /dev/null; then
+    terraform_path=$(which terraform)
     complete -o nospace -C $terraform_path terraform tf
+    unset terraform_path
 fi	
-unset terraform_path
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$PATH:$HOME/bin
