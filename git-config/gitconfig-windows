@@ -20,19 +20,18 @@
 	ds = diff --staged
 	ec = config --global -e
 	fixup = commit --fixup
-	ftdone = "!f() { DEFAULT=$(git default); FEATURE=$(git rev-parse --abbrev-ref HEAD); if OUTPUT=$(git status --porcelain) && [ -z "$OUTPUT" ]; then git checkout ${2-$DEFAULT}; git pull --rebase; git merge --no-ff --no-commit $FEATURE; else echo "Git repo is dirty.\n$OUTPUT"; fi }; f"
-	ftstart = "!f() { DEFAULT=$(git default); git checkout $DEFAULT; git pull --rebase --prune; git checkout -b $1 }; f"
+	ftdone = "!f() { DEFAULT=$(git default); FEATURE=$(git rev-parse --abbrev-ref HEAD); if OUTPUT=$(git status --porcelain | wc -l) && [ $OUTPUT -eq 0 ]; then git checkout -q ${1-$DEFAULT}; echo "On $DEFAULT branch. Pulling changes from remote."; git pull --rebase; echo "Merging changes from branch: $FEATURE"; git merge --squash --no-ff --no-commit $FEATURE; echo "Ready to commit."; else echo "Git repo is dirty."; fi }; f"
+	ftstart = "!f() { DEFAULT=$(git default); git checkout -q $DEFAULT; echo "On $DEFAULT branch. Pulling changes from remote."; git pull --rebase --prune; git checkout -b $1; echo "Checked out new branch: $1"; }; f"
 	hist = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 	lg = log --graph --decorate --oneline --all
 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-	migrate = "!f(){ DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
+	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	pushup = !git push -u origin HEAD
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
 	remotes = remote -v
-	rum = rebase master@{u}
 	save = !git add -A && git commit -m 'SAVEPOINT'
 	squash = commit --squash
 	st = status
