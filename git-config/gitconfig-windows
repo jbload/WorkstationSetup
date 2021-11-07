@@ -70,5 +70,3 @@
 	insteadOf = http://	
 [credential]
 	helper = wincred
-[winUpdater]
-	recentlySeenVersion = 2.25.0.windows.1
