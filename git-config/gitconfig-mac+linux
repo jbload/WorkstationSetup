@@ -47,8 +47,8 @@
 	autosetuprebase = always
 [core]
 	editor = code --wait
-	excludesfile = /Users/justin/.gitignore_global
-	hooksPath = /Users/justin/workspace/git-hooks-core
+	excludesfile = ~/.gitignore_global
+	hooksPath = ~/workspace/git-hooks-core
 [diff]
 	tool = bc
 [difftool]
@@ -57,7 +57,7 @@
 	postBuffer = 524288000
 [init]
 	defaultBranch = master
-	templateDir = /Users/justin/workspace/git-templates	
+	templateDir = ~/workspace/git-templates	
 [merge]
 	tool = bc
 [mergetool]

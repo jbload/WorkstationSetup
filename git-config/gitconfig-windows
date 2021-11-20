@@ -48,8 +48,8 @@
 [core]
 	autocrlf = true
 	editor = code --wait
-	excludesfile = /Users/jbloa/.gitignore_global
-	hooksPath = /Users/jbloa/workspace/git-hooks-core
+	excludesfile = ~/.gitignore_global
+	hooksPath = ~/workspace/git-hooks-core
 	safecrlf = false
 [credential]
 	helper = wincred	
@@ -61,7 +61,7 @@
 	postBuffer = 524288000
 [init]
 	defaultBranch = master
-	templateDir = /Users/jbloa/workspace/git-templates	
+	templateDir = ~/workspace/git-templates	
 [merge]
 	tool = bc
 [mergetool]
