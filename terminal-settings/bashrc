@@ -1,6 +1,6 @@
-HISTCONTROL=ignoreboth
-HISTSIZE=1000
-HISTFILESIZE=2000
+export HISTCONTROL=ignoreboth
+export HISTSIZE=1000
+export HISTFILESIZE=2000
 shopt -s histappend
 shopt -s checkwinsize
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -101,6 +101,7 @@ export BLOCKSIZE=1k
 export NODE_OPTIONS=--max_old_space_size=8192
 export PIPENV_VENV_IN_PROJECT=1
 export ASPNETCORE_ENVIRONMENT=Development
+export WORKSPACE=~/workspace
 
 # You may need to manually set your language environment
 export LC_ALL=en_US.UTF-8
@@ -146,7 +147,7 @@ alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable 
 alias show_options='shopt'                  # Show_options: display bash options settings
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
 alias tf=terraform
-alias ws='cd ~/workspace'
+alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias zshrc='. ~/zshrc'
 alias ~="cd ~"                              # ~:            Go Home
@@ -165,6 +166,8 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_THEME_NAME=Solarized
     . $HOME/.bash-git-prompt/gitprompt.sh
 fi
+
+cd $WORKSPACE
 
 if [ -f ~/.bashrc-machine-specific ]; then
     . ~/.bashrc-machine-specific

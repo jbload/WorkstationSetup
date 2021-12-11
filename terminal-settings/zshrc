@@ -1,6 +1,6 @@
-HISTCONTROL=ignoreboth
-HISTSIZE=1000
-HISTFILESIZE=2000
+export HISTCONTROL=ignoreboth
+export HISTSIZE=1000
+export HISTFILESIZE=2000
 setopt APPEND_HISTORY
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -11,6 +11,7 @@ export PATH=$PATH:/usr/local
 export PATH=$PATH:$HOME/.fastlane/bin
 export PATH=$PATH:$HOME/.rbenv/bin
 export PATH=$PATH:/usr/local/opt/mysql-client/bin
+export WORKSPACE=~/workspace
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -154,7 +155,7 @@ alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable 
 alias show_options='shopt'                  # Show_options: display bash options settings
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
 alias tf=terraform
-alias ws='cd ~/workspace'
+alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias zshrc='. ~/zshrc'
 alias ~="cd ~"                              # ~:            Go Home
@@ -263,6 +264,8 @@ git_info() {
 PS1='
 $(ssh_info)%{$fg[magenta]%}%~%u $(git_info)
 %(?.%{$fg[blue]%}.%{$fg[red]%})%(!.#.$)%{$reset_color%} '
+
+cd $WORKSPACE
 
 if [ -f ~/.zshrc-machine-specific ]; then
     . ~/.zshrc-machine-specific
