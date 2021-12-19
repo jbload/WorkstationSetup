@@ -167,7 +167,7 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     . $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
-cd $WORKSPACE
+builtin cd $WORKSPACE
 
 if [ -f ~/.bashrc-machine-specific ]; then
     . ~/.bashrc-machine-specific
