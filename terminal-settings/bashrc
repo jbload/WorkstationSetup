@@ -65,6 +65,7 @@ if [ -f ~/.git-completion.bash ]; then
 fi
 
 if command -v microk8s kubectl version &> /dev/null; then
+    alias mks='microk8s'
     alias kubectl='microk8s kubectl'
 fi
 

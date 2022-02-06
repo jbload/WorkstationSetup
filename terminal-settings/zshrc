@@ -91,6 +91,7 @@ fi
 
 # User configuration
 if type microk8s > /dev/null; then
+    alias mks='microk8s'
     alias kubectl='microk8s kubectl'
 fi
 

@@ -9,6 +9,7 @@ if(Get-Command "git" -ErrorAction SilentlyContinue)
 
 if(Get-Command "microk8s" -ErrorAction SilentlyContinue) 
 { 
+    Set-Alias mks -Value "microk8s" -Option AllScope
     Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
 }
 
