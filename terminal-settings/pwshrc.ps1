@@ -85,7 +85,7 @@ function mcd()
     cd $path
 }
 
-$machinSpecificProfile = Join-Path ([Environment]::GetFolderPath("MyDocuments")) pwshrc-machine-specific.ps1
+$machinSpecificProfile = Join-Path $HOME .pwshrc-machine-specific.ps1
 
 if(Test-Path $machinSpecificProfile) 
 {
