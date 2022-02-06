@@ -95,6 +95,10 @@ if type microk8s > /dev/null; then
     alias kubectl='microk8s kubectl'
 fi
 
+if [ -f $HOME/.kube/config ]; then
+    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
+fi
+
 if type subl > /dev/null; then
     editor_path=$(which subl)
     alias edit='subl'    

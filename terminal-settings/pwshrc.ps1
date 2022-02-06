@@ -29,6 +29,11 @@ if(Get-Command "terraform" -ErrorAction SilentlyContinue)
     Set-Alias tf -Value terraform -Option AllScope
 }
 
+if(Test-Path "$HOME\.kube\config")
+{
+    $env:KUBECONFIG="$env:KUBECONFIG;$HOME\.kube\config" 
+}
+
 if(Test-Path "c:\Program Files\Sublime Text\sublime_text.exe")
 {
     Set-Alias edit -Value sublime_text -Option AllScope

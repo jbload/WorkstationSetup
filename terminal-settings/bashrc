@@ -80,6 +80,10 @@ if command -v terraform version &> /dev/null; then
     unset terraform_path
 fi	
 
+if [ -f $HOME/.kube/config ]; then
+    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
+fi
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:/usr/local/bin/
