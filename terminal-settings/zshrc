@@ -90,6 +90,10 @@ fi
 . $ZSH/oh-my-zsh.sh
 
 # User configuration
+if type microk8s > /dev/null; then
+    alias kubectl='microk8s kubectl'
+fi
+
 if type subl > /dev/null; then
     editor_path=$(which subl)
     alias edit='subl'    

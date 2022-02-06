@@ -64,6 +64,10 @@ if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash
 fi
 
+if command -v microk8s kubectl version &> /dev/null; then
+    alias kubectl='microk8s kubectl'
+fi
+
 if command -v kubectl version &> /dev/null; then
     . <(kubectl completion bash)
     complete -F __start_kubectl k

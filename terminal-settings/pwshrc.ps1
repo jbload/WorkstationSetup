@@ -1,14 +1,29 @@
-# Installs
-# Install-Module PSKubectlCompletion
-
-if(Get-Command "kubectl.exe" -ErrorAction SilentlyContinue) 
+if(Get-Command "git" -ErrorAction SilentlyContinue) 
 { 
+    if (-Not (Get-Module -ListAvailable -Name posh-git)) {
+        Install-Module posh-git        
+    } 
+
+    Import-Module posh-git
+}
+
+if(Get-Command "microk8s" -ErrorAction SilentlyContinue) 
+{ 
+    Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
+}
+
+if(Get-Command "kubectl" -ErrorAction SilentlyContinue) 
+{ 
+    if (-Not (Get-Module -ListAvailable -Name PSKubectlCompletion)) {
+        Install-Module PSKubectlCompletion        
+    } 
+
     Import-Module PSKubectlCompletion  
     Set-Alias k -Value kubectl -Option AllScope
     Register-KubectlCompletion 
 }
 
-if(Get-Command "terraform.exe" -ErrorAction SilentlyContinue) 
+if(Get-Command "terraform" -ErrorAction SilentlyContinue) 
 { 
     Set-Alias tf -Value terraform -Option AllScope
 }
@@ -70,7 +85,7 @@ function mcd()
     cd $path
 }
 
-$machinSpecificProfile = Join-Path ([Environment]::GetFolderPath("MyDocuments")) PowerShell/Microsoft.PowerShell_profile_machine-specific.ps1
+$machinSpecificProfile = Join-Path ([Environment]::GetFolderPath("MyDocuments")) pwshrc-machine-specific.ps1
 
 if(Test-Path $machinSpecificProfile) 
 {
