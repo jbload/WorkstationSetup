@@ -1,7 +1,7 @@
 if(Get-Command "git" -ErrorAction SilentlyContinue) 
 { 
     if (-Not (Get-Module -ListAvailable -Name posh-git)) {
-        Install-Module posh-git        
+        Install-Module posh-git -Scope CurrentUser       
     } 
 
     Import-Module posh-git
@@ -15,7 +15,7 @@ if(Get-Command "microk8s" -ErrorAction SilentlyContinue)
 if(Get-Command "kubectl" -ErrorAction SilentlyContinue) 
 { 
     if (-Not (Get-Module -ListAvailable -Name PSKubectlCompletion)) {
-        Install-Module PSKubectlCompletion        
+        Install-Module PSKubectlCompletion -Scope CurrentUser        
     } 
 
     Import-Module PSKubectlCompletion  
@@ -67,7 +67,7 @@ function path { echo ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
 
-Remove-Alias cd
+Remove-Item Alias:cd
 
 function cd() 
 {
@@ -92,7 +92,6 @@ if(Test-Path $machinSpecificProfile)
     . $machinSpecificProfile
 }
 
-Import-Module posh-git
 ws | Out-Null
 
 Get-Date
