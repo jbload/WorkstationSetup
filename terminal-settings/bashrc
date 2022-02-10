@@ -93,9 +93,12 @@ export PATH=$PATH:/usr/local
 if type subl > /dev/null; then
     editor_path=$(which subl)
     alias edit='subl'    
+elif type code-insiders > /dev/null; then
+    editor_path=$(which code-insiders)        
+    alias edit='code-insiders'
 elif type code > /dev/null; then
     editor_path=$(which code)        
-    alias edit='code'
+    alias edit='code'    
 else
     alias edit='vi'
 fi
