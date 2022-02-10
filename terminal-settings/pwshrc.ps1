@@ -93,7 +93,7 @@ function path { echo ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
 
-Remove-Item Alias:cd
+Remove-Item Alias:cd -ErrorAction SilentlyContinue
 
 function cd() 
 {
