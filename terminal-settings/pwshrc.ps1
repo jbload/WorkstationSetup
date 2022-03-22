@@ -50,6 +50,10 @@ if(Test-Path "c:\Program Files\Sublime Text\sublime_text.exe")
 {
     Set-Alias edit -Value sublime_text -Option AllScope
 }
+if(Test-Path "/usr/local/bin/subl")
+{
+    Set-Alias edit -Value subl -Option AllScope
+}
 elseif(Get-Command "code-insiders.exe" -ErrorAction SilentlyContinue) 
 {
     Set-Alias edit -Value code-insiders -Option AllScope
