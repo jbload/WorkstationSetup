@@ -1,3 +1,10 @@
+if (-Not (Get-Module -ListAvailable -Name oh-my-posh)) {
+    Install-Module oh-my-posh -Scope CurrentUser       
+} 
+
+Import-Module oh-my-posh
+Set-PoshPrompt -Theme Takuya
+
 if(Get-Command "git" -ErrorAction SilentlyContinue) 
 { 
     if (-Not (Get-Module -ListAvailable -Name posh-git)) {
@@ -32,6 +39,11 @@ if(Get-Command "terraform" -ErrorAction SilentlyContinue)
 if(Test-Path "$HOME\.kube\config")
 {
     $env:KUBECONFIG="$env:KUBECONFIG;$HOME\.kube\config" 
+}
+
+if(Test-Path "$HOME\.helm-completion.ps1")
+{
+    . "$HOME\.helm-completion.ps1"
 }
 
 if(Test-Path "c:\Program Files\Sublime Text\sublime_text.exe")
@@ -95,11 +107,57 @@ function mcd()
     cd $path
 }
 
-$machinSpecificProfile = Join-Path $HOME .pwshrc-machine-specific.ps1
-
-if(Test-Path $machinSpecificProfile) 
+function Remove-BinFolders() 
 {
-    . $machinSpecificProfile
+    $binFolders = Get-ChildItem -Directory -Include bin,obj -Recurse -Force -Depth 10 | Where-Object { -Not $_.FullName.Contains("Node_modules", "OrdinalIgnoreCase") }
+
+    foreach($binFolder in $binFolders) 
+    {
+        $fullPath = $binFolder.FullName
+        Write-Host "Removing folder: $fullPath"
+        Remove-Item $binFolder.FullPath -Force -Recurse
+    }    
+}
+
+function Remove-OldGitTags() 
+{
+    param($recentTagCount=10, $tagFilter="tags/releases")
+
+    $tagFileName = "git-tags.txt"
+    git for-each-ref --format '%(refname)' --sort=taggerdate | Select-String -Pattern $tagFilter > $tagFileName
+
+    $tagContent = Get-Content $tagFileName -Filter $tagFilter
+
+    if($tagContent.Length -gt $recentTagCount) 
+    {
+        $oldTagCount = $tagContent.Length - $recentTagCount
+        $oldTags = $tagContent[0..($oldTagCount - 1)]
+        $i = 1
+        
+        foreach($oldTag in $oldTags)
+        {
+            Write-Host "Removing old git tag $i of $oldTagCount with: git push origin :$oldTag"
+            git push origin :$oldTag
+            $i += 1
+        }
+
+        Write-Host "Removed $oldTagCount old git tag$(if ($oldTagCount -gt 1) {"s."} else {"."})  Current tag count: $recentTagCount"
+        
+        git tag -l | %{git tag -d $_}
+        git fetch --tags
+        Write-Host "Pruned local tags."
+    }
+    else
+    {
+        Write-Host "No old git tags to remove. Current tag count: $($tagContent.Length)"
+    }
+
+    Remove-Item $tagFileName -Force -ErrorAction Ignore
+}
+
+if(Test-Path "$HOME\.pwshrc-machine-specific.ps1")
+{
+    . "$HOME\.pwshrc-machine-specific.ps1"
 }
 
 ws | Out-Null
