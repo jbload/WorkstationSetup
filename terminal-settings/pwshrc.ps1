@@ -1,56 +1,125 @@
-if (-Not (Get-Module -ListAvailable -Name oh-my-posh)) {
-    Install-Module oh-my-posh -Scope CurrentUser       
-} 
+$useOhMyPosh = $true
+$useGit = $true
+$useMicrok8s = $true
+$useKubectl = $true
+$useTerraform = $true
+$useHelm = $true
+$goToWorkspaceOnStartup = $true
+$clearScreenOnStartup = $true
+$workspace = "~/workspace"
+$debug = $false
 
-Import-Module oh-my-posh
-Set-PoshPrompt -Theme Takuya
+function Write-Debug
+{
+    param($message)
 
-if(Get-Command "git" -ErrorAction SilentlyContinue) 
-{ 
-    if (-Not (Get-Module -ListAvailable -Name posh-git)) {
-        Install-Module posh-git -Scope CurrentUser       
+    if($debug)
+    {
+        Write-Host $message
+    }    
+}
+
+if(Test-Path "$HOME\.pwshrc-options.ps1")
+{
+    Write-Debug "Loading .pwshrc-options.ps1"
+    . "$HOME\.pwshrc-options.ps1"
+}
+
+if($useOhMyPosh) 
+{
+    if (-Not (Get-Module -ListAvailable -Name oh-my-posh)) 
+    {
+        Write-Debug "Installing oh-my-posh"
+        Install-Module oh-my-posh -Scope CurrentUser       
     } 
 
-    Import-Module posh-git
+    Write-Debug "Importing oh-my-posh"
+    Import-Module oh-my-posh
+    Write-Debug "Setting Posh-Prompt"
+    Set-PoshPrompt -Theme Takuya
 }
 
-if(Get-Command "microk8s" -ErrorAction SilentlyContinue) 
-{ 
-    Set-Alias mks -Value "microk8s" -Option AllScope
-    Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
-}
-
-if(Get-Command "kubectl" -ErrorAction SilentlyContinue) 
-{ 
-    if (-Not (Get-Module -ListAvailable -Name PSKubectlCompletion)) {
-        Install-Module PSKubectlCompletion -Scope CurrentUser        
-    } 
-
-    Import-Module PSKubectlCompletion  
-    Set-Alias k -Value kubectl -Option AllScope
-    Register-KubectlCompletion 
-}
-
-if(Get-Command "terraform" -ErrorAction SilentlyContinue) 
-{ 
-    Set-Alias tf -Value terraform -Option AllScope
-}
-
-if(Test-Path "$HOME\.kube\config")
+if($useGit) 
 {
-    $env:KUBECONFIG="$env:KUBECONFIG;$HOME\.kube\config" 
+    if(Get-Command "git" -ErrorAction SilentlyContinue) 
+    { 
+        if (-Not (Get-Module -ListAvailable -Name posh-git)) {
+            Write-Debug "Installing posh-git"
+            Install-Module posh-git -Scope CurrentUser       
+        } 
+
+        Write-Debug "Importing posh-git"
+        Import-Module posh-git
+    }
 }
 
-if(Test-Path "$HOME\.helm-completion.ps1")
+if($useMicrok8s)
 {
-    . "$HOME\.helm-completion.ps1"
+    if(Get-Command "microk8s" -ErrorAction SilentlyContinue) 
+    { 
+        Write-Debug "Setting microk8s aliases: mks, kubectl"
+        Set-Alias mks -Value "microk8s" -Option AllScope
+        Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
+    }
+}
+
+if($useKubectl)
+{
+    if(Get-Command "kubectl" -ErrorAction SilentlyContinue) 
+    { 
+        if (-Not (Get-Module -ListAvailable -Name PSKubectlCompletion)) {
+            Write-Debug "Installing PSKubectlCompletion"
+            Install-Module PSKubectlCompletion -Scope CurrentUser        
+        } 
+
+        Write-Debug "Importing PSKubectlCompletion"
+        Import-Module PSKubectlCompletion  
+
+        Write-Debug "Setting kubectl alias: k"
+        Set-Alias k -Value kubectl -Option AllScope
+
+        Write-Debug "Registering KubectlCompletion"
+        Register-KubectlCompletion 
+    }
+
+    if(Test-Path "$HOME\.kube\config")
+    {
+        if($env:KUBECONFIG)
+        {
+            $env:KUBECONFIG="$env:KUBECONFIG;$HOME\.kube\config" 
+        }
+        else
+        {
+            $env:KUBECONFIG="$HOME\.kube\config" 
+        }
+
+        Write-Debug "Setting KUBCONFIG environment variable to: $env:KUBECONFI"
+    }
+}
+
+if($useTerraform)
+{
+    if(Get-Command "terraform" -ErrorAction SilentlyContinue) 
+    { 
+        Write-Debug "Setting terraform alias: tf"
+        Set-Alias tf -Value terraform -Option AllScope
+    }
+}
+
+if($useHelm)
+{
+    if(Test-Path "$HOME\.helm-completion.ps1")
+    {
+        Write-Debug "Installing .helm-completion.ps1"
+        . "$HOME\.helm-completion.ps1"
+    }
 }
 
 if(Test-Path "c:\Program Files\Sublime Text\sublime_text.exe")
 {
     Set-Alias edit -Value sublime_text -Option AllScope
 }
-if(Test-Path "/usr/local/bin/subl")
+elseif(Test-Path "/usr/local/bin/subl")
 {
     Set-Alias edit -Value subl -Option AllScope
 }
@@ -70,7 +139,7 @@ else
 $env:NODE_OPTIONS = "--max_old_space_size=8192"
 $env:PIPENV_VENV_IN_PROJECT = "1"
 $env:ASPNETCORE_ENVIRONMENT = "Development"
-$env:WORKSPACE = "~/workspace"
+$env:WORKSPACE = $workspace
 
 function .. { cd .. }
 function ... { cd ../.. }
@@ -93,7 +162,7 @@ function path { echo ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
 
-Remove-Item Alias:cd -ErrorAction SilentlyContinue
+Remove-Item Alias:cd
 
 function cd() 
 {
@@ -123,47 +192,20 @@ function Remove-BinFolders()
     }    
 }
 
-function Remove-OldGitTags() 
+if(Test-Path "$HOME\.pwshrc-customizations.ps1")
 {
-    param($recentTagCount=10, $tagFilter="tags/releases")
-
-    $tagFileName = "git-tags.txt"
-    git for-each-ref --format '%(refname)' --sort=taggerdate | Select-String -Pattern $tagFilter > $tagFileName
-
-    $tagContent = Get-Content $tagFileName -Filter $tagFilter
-
-    if($tagContent.Length -gt $recentTagCount) 
-    {
-        $oldTagCount = $tagContent.Length - $recentTagCount
-        $oldTags = $tagContent[0..($oldTagCount - 1)]
-        $i = 1
-        
-        foreach($oldTag in $oldTags)
-        {
-            Write-Host "Removing old git tag $i of $oldTagCount with: git push origin :$oldTag"
-            git push origin :$oldTag
-            $i += 1
-        }
-
-        Write-Host "Removed $oldTagCount old git tag$(if ($oldTagCount -gt 1) {"s."} else {"."})  Current tag count: $recentTagCount"
-        
-        git tag -l | %{git tag -d $_}
-        git fetch --tags
-        Write-Host "Pruned local tags."
-    }
-    else
-    {
-        Write-Host "No old git tags to remove. Current tag count: $($tagContent.Length)"
-    }
-
-    Remove-Item $tagFileName -Force -ErrorAction Ignore
+    Write-Debug "Loading .pwshrc-customizations.ps1"
+    . "$HOME\.pwshrc-customizations.ps1"
 }
 
-if(Test-Path "$HOME\.pwshrc-machine-specific.ps1")
+if($goToWorkspaceOnStartup)
 {
-    . "$HOME\.pwshrc-machine-specific.ps1"
+    ws | Out-Null
 }
 
-ws | Out-Null
+if($clearScreenOnStartup -and -not $debug)
+{
+    Clear-Host
+}
 
 Get-Date
