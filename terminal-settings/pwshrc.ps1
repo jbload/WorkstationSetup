@@ -19,10 +19,10 @@ function Write-Debug
     }    
 }
 
-if(Test-Path "$HOME\.pwshrc-options.ps1")
+if(Test-Path "$HOME\.pwshrc-pre-init.ps1")
 {
-    Write-Debug "Loading .pwshrc-options.ps1"
-    . "$HOME\.pwshrc-options.ps1"
+    Write-Debug "Loading .pwshrc-pre-init.ps1"
+    . "$HOME\.pwshrc-pre-init.ps1"
 }
 
 if($useOhMyPosh) 
@@ -192,10 +192,10 @@ function Remove-BinFolders()
     }    
 }
 
-if(Test-Path "$HOME\.pwshrc-customizations.ps1")
+if(Test-Path "$HOME\.pwshrc-post-init.ps1")
 {
-    Write-Debug "Loading .pwshrc-customizations.ps1"
-    . "$HOME\.pwshrc-customizations.ps1"
+    Write-Debug "Loading .pwshrc-post-init.ps1"
+    . "$HOME\.pwshrc-post-init.ps1"
 }
 
 if($goToWorkspaceOnStartup)
