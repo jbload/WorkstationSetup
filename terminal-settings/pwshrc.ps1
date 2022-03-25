@@ -1,4 +1,5 @@
 $useOhMyPosh = $true
+$ohMyPoshTheme = "$HOME\.oh-my-posh.justin.json" #Takuya
 $useGit = $true
 $useMicrok8s = $true
 $useKubectl = $true
@@ -36,7 +37,7 @@ if($useOhMyPosh)
     Write-Debug "Importing oh-my-posh"
     Import-Module oh-my-posh
     Write-Debug "Setting Posh-Prompt"
-    Set-PoshPrompt -Theme Takuya
+    Set-PoshPrompt -Theme $ohMyPoshTheme
 }
 
 if($useGit) 
@@ -80,20 +81,6 @@ if($useKubectl)
 
         Write-Debug "Registering KubectlCompletion"
         Register-KubectlCompletion 
-    }
-
-    if(Test-Path "$HOME\.kube\config")
-    {
-        if($env:KUBECONFIG)
-        {
-            $env:KUBECONFIG="$env:KUBECONFIG;$HOME\.kube\config" 
-        }
-        else
-        {
-            $env:KUBECONFIG="$HOME\.kube\config" 
-        }
-
-        Write-Debug "Setting KUBCONFIG environment variable to: $env:KUBECONFI"
     }
 }
 
