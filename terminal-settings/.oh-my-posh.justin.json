@@ -9,10 +9,10 @@
           "foreground": "#ffffff",
           "leading_diamond": "\u256d\u2500\ue0b6",
           "properties": {
-            "template": " {{ .Name }} "
+            "template": " {{ .UserName }}@{{ .HostName }} "
           },
           "style": "diamond",
-          "type": "shell"
+          "type": "session"
         },
         {
           "background": "#ef5350",
@@ -23,28 +23,20 @@
           },
           "style": "diamond",
           "type": "root"
-        },
+        },        
         {
           "background": "#444444",
           "foreground": "#E4E4E4",
           "powerline_symbol": "\ue0b0",
           "properties": {
+            "folder_separator_icon": " \ue0b1 ",
+            "home_icon": "\uf7db",
             "style": "full",
             "template": " {{ .Path }} "
           },
           "style": "powerline",
           "type": "path"
-        },
-        {
-          "type": "kubectl",
-          "style": "powerline",
-          "powerline_symbol": "\uE0B0",
-          "foreground": "#000000",
-          "background": "#ebcc34",
-          "properties": {
-            "template": "{{if .Context}} \uFD31 {{.User}}@{{.Cluster}}{{if .Namespace}}[{{.Namespace}}]{{end}} {{end}}"
-          }
-        },
+        },        
         {
           "background": "#FFFB38",
           "background_templates": [
@@ -71,7 +63,7 @@
       "alignment": "right",
       "segments": [
         {
-          "background": "#303030",
+          "background": "#FFFB38",
           "foreground": "#3C873A",
           "leading_diamond": " \ue0b6",
           "properties": {
@@ -85,17 +77,18 @@
           "type": "node"
         },
         {
-          "background": "#40c4ff",
-          "foreground": "#ffffff",
+          "type": "kubectl",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#000000",
+          "background": "#ebcc34",
           "invert_powerline": true,
           "leading_diamond": " \ue0b6",
           "properties": {
-            "time_format": "Mon, 1/2/06 3:04 PM",
-            "template": " \uf5ef {{ .CurrentDate | date .Format }} "
+            "template": "{{if .Context}} \uFD31 {{.User}}@{{.Cluster}}{{if .Namespace}}[{{.Namespace}}]{{end}} {{end}}"
           },
           "style": "diamond",
-          "trailing_diamond": "\ue0b4",
-          "type": "time"
+          "trailing_diamond": "\ue0b4"
         }
       ],
       "type": "prompt"
