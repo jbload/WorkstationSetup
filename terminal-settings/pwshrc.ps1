@@ -26,7 +26,9 @@ if(Test-Path "$HOME\.pwshrc-pre-init.ps1")
     . "$HOME\.pwshrc-pre-init.ps1"
 }
 
-if($useOhMyPosh) 
+$isPackageManagerProfile = $PROFILE -like "*Nuget_profile.ps1"
+
+if($useOhMyPosh -and -not $isPackageManagerProfile) 
 {
     if (-Not (Get-Module -ListAvailable -Name oh-my-posh)) 
     {
