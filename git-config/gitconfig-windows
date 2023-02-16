@@ -8,15 +8,19 @@
 	br = branch
 	branches = branch -a
 	churn = !git --no-pager log --name-only --oneline | grep -v ' ' | sort | uniq -c | sort -nr | head
-	cm = commit -m
+	ci = commit -m
 	co = checkout
 	cob = checkout -b
 	com = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
 	conflicts = !git diff --name-only --diff-filter=U
 	contrib = shortlog -e --summary --numbered
 	cp = cherry-pick
+	dci = duet-commit
+	dmg = duet-merge
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 	di = diff
+	drb = rebase -i --exec 'git duet-commit --amend'
+	drv = duet-revert
 	ds = diff --staged
 	ec = config --global -e
 	fixup = commit --fixup
