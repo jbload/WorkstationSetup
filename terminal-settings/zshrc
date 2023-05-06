@@ -95,6 +95,14 @@ if type microk8s > /dev/null; then
     alias kubectl='microk8s kubectl'
 fi
 
+if type ng > /dev/null; then
+    source <(ng completion script)
+fi
+
+if type kubectl > /dev/null; then
+    source <(kubectl completion zsh)
+fi
+
 if [ -f $HOME/.kube/config ]; then
     export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
 fi
@@ -110,6 +118,12 @@ elif type code-insiders > /dev/null; then
     alias edit='code-insiders'    
 else
     alias edit='vi'
+fi
+
+if type vim > /dev/null; then
+    export KUBE_EDITOR=vim
+else
+    export KUBE_EDITOR=vi
 fi
 
 if [ -f $editor_path ]; then
@@ -281,6 +295,10 @@ builtin cd $WORKSPACE
 
 if [ -f ~/.zshrc-machine-specific ]; then
     . ~/.zshrc-machine-specific
+fi
+
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
 fi
 
 clear
