@@ -1,5 +1,7 @@
 [alias]
+	aa = add -A
 	ac = !git add -A && git commit -m
+	adc = !git add -A && git duet-commit -m
 	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
 	amend = commit -a --amend
 	amendit = commit --amend --no-edit
@@ -33,6 +35,7 @@
 	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	prn = "!f() { git tag -l | xargs git tag -d; git fetch --tags && git fetch --prune && git gc; }; f"
 	pushup = !git push -u origin HEAD
+	pushf = pushup --force-with-lease
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
