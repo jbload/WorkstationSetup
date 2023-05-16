@@ -1,3 +1,7 @@
+if [ -f ~/.zshrc-pre-init ]; then
+    . ~/.zshrc-pre-init
+fi
+
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -293,8 +297,8 @@ $(ssh_info)%{$fg[magenta]%}%~%u $(git_info)
 
 builtin cd $WORKSPACE
 
-if [ -f ~/.zshrc-machine-specific ]; then
-    . ~/.zshrc-machine-specific
+if [ -f ~/.zshrc-post-init ]; then
+    . ~/.zshrc-post-init
 fi
 
 if command -v pyenv 1>/dev/null 2>&1; then
