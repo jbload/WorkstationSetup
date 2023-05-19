@@ -75,6 +75,8 @@
 	trustExitCode = true
 [pull]
 	rebase = true
+[trailer]
+	ifexists = addIfDifferent	
 [transfer]
 	fsckobjects = true
 [user]

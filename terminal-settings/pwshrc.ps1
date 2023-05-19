@@ -11,6 +11,9 @@ $clearScreenOnStartup = $true
 $workspace = "~/workspace"
 $debug = $false
 
+$env:GIT_DUET_ROTATE_AUTHOR = 1
+$env:GIT_DUET_ALLOW_MULTIPLE_COMMITTERS = 1
+
 $diagnostics = @()
 
 function Write-Debug
