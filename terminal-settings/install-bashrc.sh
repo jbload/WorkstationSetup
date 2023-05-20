@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo Backing up ~/bashrc...
-cp ~/.bashrc "~/.bashrc-$(date +%F_%R).backup"
+cp ~/.bashrc ~/.bashrc-$(date +%F_%R).backup
 
 echo Copying bash profile to ~/.bashrc...
 cp bashrc ~/.bashrc

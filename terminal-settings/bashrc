@@ -186,7 +186,7 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     . $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
-if [ -v GO_TO_WORKSPACE_ON_STARTUP ]; then
+if [[ -v $GO_TO_WORKSPACE_ON_STARTUP ]]; then
     builtin cd $WORKSPACE
 fi
 
@@ -194,7 +194,7 @@ if [ -f ~/.bashrc-post-init ]; then
     . ~/.bashrc-post-init
 fi
 
-if [ -v CLEAR_SCREEN_ON_STARTUP ]; then
+if [[ -v $CLEAR_SCREEN_ON_STARTUP ]]; then
     clear
 fi
 

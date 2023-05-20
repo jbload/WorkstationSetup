@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 echo Backing up ~/.zshrc...
-cp ~/.zshrc "~/.zshrc-$(date +%F_%R).backup"
+cp ~/.zshrc ~/.zshrc-$(date +%F_%R).backup
 
 echo Copying zsh profile to ~/.zshrc...
 cp zshrc ~/.zshrc
