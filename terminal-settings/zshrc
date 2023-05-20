@@ -1,12 +1,12 @@
-if [ -f ~/.zshrc-pre-init ]; then
-    . ~/.zshrc-pre-init
-fi
-
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
+
+if [ -f ~/.zshrc-pre-init ]; then
+    . ~/.zshrc-pre-init
+fi
 
 setopt APPEND_HISTORY
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -298,7 +298,9 @@ PS1='
 $(ssh_info)%{$fg[magenta]%}%~%u $(git_info)
 %(?.%{$fg[blue]%}.%{$fg[red]%})%(!.#.$)%{$reset_color%} '
 
-builtin cd $WORKSPACE
+if [ -v GO_TO_WORKSPACE_ON_STARTUP ]; then
+    builtin cd $WORKSPACE
+fi
 
 if [ -f ~/.zshrc-post-init ]; then
     . ~/.zshrc-post-init
@@ -308,5 +310,8 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-clear
+if [ -v CLEAR_SCREEN_ON_STARTUP ]; then
+    clear
+fi
+
 date
