@@ -1,3 +1,7 @@
+if [ -f ~/.bashrc-pre-init ]; then
+    . ~/.bashrc-pre-init
+fi
+
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -184,8 +188,8 @@ fi
 
 builtin cd $WORKSPACE
 
-if [ -f ~/.bashrc-machine-specific ]; then
-    . ~/.bashrc-machine-specific
+if [ -f ~/.bashrc-post-init ]; then
+    . ~/.bashrc-post-init
 fi
 
 clear

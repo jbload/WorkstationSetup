@@ -1,18 +1,30 @@
 #!/bin/pwsh
 
+Write-Output "Backing up ~/.pwshrc.ps1..."
+Copy-Item pwshrc.ps1 "~/.pwshrc.ps1-$(get-date -f yyyyMMddhhmmss).backup"
+
 Write-Output "Copying pwsh profile to ~/.pwshrc.ps1..."
 Copy-Item pwshrc.ps1 ~/.pwshrc.ps1
 
-$machinSpecificProfile = Join-Path $HOME .pwshrc-machine-specific.ps1
+$initFilenames = 
+@(
+    "pwshrc-pre-init.ps1",
+    "pwshrc-post-init.ps1"
+)
 
-if(Test-Path $machinSpecificProfile) 
+foreach($initFilename in $initFilenames)
 {
-    Write-Output "~/.pwshrc-machine-specific.ps1 file already exists..."
-}
-else 
-{
-    Write-Output "Creating blank ~/.pwshrc-machine-specific.ps1 file..."
-    New-Item ~/.pwshrc-machine-specific.ps1 -Force
+    $destinationPath = Join-Path $HOME ".$initFilename"
+
+    if(Test-Path $destinationPath) 
+    {
+        Write-Output "~/.$initFilename file already exists..."
+    }
+    else 
+    {
+        Write-Output "Creating default ~/.$initFilename file..."
+        Copy-Item $initFilename $destinationPath -Force
+    }
 }
 
 $osPlatform = [System.Environment]::OSVersion.Platform

@@ -6,8 +6,8 @@ $useMicrok8s = $true
 $useKubectl = $true
 $useTerraform = $true
 $useHelm = $true
-$goToWorkspaceOnStartup = $true
-$clearScreenOnStartup = $true
+$goToWorkspaceOnStartup = $false
+$clearScreenOnStartup = $false
 $workspace = "~/workspace"
 $debug = $false
 
