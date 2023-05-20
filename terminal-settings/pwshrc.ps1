@@ -16,6 +16,11 @@ $env:GIT_DUET_ALLOW_MULTIPLE_COMMITTERS = 1
 
 $diagnostics = @()
 
+function prompt  
+{  
+    "`e[38;2;0;255;0m$($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1))`n$ "
+}
+
 function Write-Debug
 {
     param($message)
