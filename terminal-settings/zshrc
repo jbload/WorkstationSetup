@@ -9,6 +9,7 @@ if [ -f ~/.zshrc-pre-init ]; then
 fi
 
 setopt APPEND_HISTORY
+autoload -U +X bashcompinit && bashcompinit
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # If you come from bash you might have to change your $PATH.
@@ -107,7 +108,16 @@ if type ng > /dev/null; then
 fi
 
 if type kubectl > /dev/null; then
+    alias k=kubectl 
+    alias kctx=kubectx
     source <(kubectl completion zsh)
+fi
+
+if type terraform > /dev/null; then
+    alias tf=terraform
+    terraform_path=$(which terraform)
+    complete -o nospace -C $terraform_path terraform tf
+    unset terraform_path
 fi
 
 if [ -f $HOME/.kube/config ]; then
@@ -158,7 +168,6 @@ alias .3='cd ../../../'                     # Go back 3 directory levels
 alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
-alias bashrc='. ~/.bashrc'
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
 alias cic='set completion-ignore-case On'   # cic:          Make tab-completion case-insensitive
 alias cl='clear'                            # cl:           Clear terminal display
@@ -173,7 +182,6 @@ alias fix_stty='stty sane'                  # fix_stty:     Restore terminal set
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
 alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on connections for en0
 alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
-alias k=kubectl
 alias less='less -FSRXc'                    # Preferred 'less' implementation
 alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
@@ -187,7 +195,6 @@ alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listenin
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
 alias show_options='shopt'                  # Show_options: display bash options settings
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
-alias tf=terraform
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias zshrc='. ~/zshrc'
