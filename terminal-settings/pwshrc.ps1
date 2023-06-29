@@ -204,6 +204,7 @@ function myip { curl https://dynamicdns.park-your-domain.com/getip }
 function path { echo ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
+function yui { yarn upgrade-interactive }
 
 Remove-Item Alias:cd
 

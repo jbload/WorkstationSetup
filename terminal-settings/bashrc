@@ -170,6 +170,7 @@ alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rul
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias ~="cd ~"                              # ~:            Go Home
+alias yui="yarn upgrade-interactive"
 
 cd () { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and jumps inside
