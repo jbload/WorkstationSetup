@@ -1,3 +1,5 @@
+[advice]
+	skippedCherryPicks = false
 [alias]
 	aa = add -A
 	ac = !git add -A && git commit -m
