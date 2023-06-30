@@ -41,7 +41,9 @@
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
+	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
+	reword = commit --amend
 	save = !git add -A && git commit -m 'SAVEPOINT'
 	squash = commit --squash
 	st = status
