@@ -4,6 +4,20 @@ export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
 
+export git_repos=()
+: '
+This could be set explicitly like:
+    export git_repos=(
+        ~/workspace/repo1
+        ~/workspace/repo2
+        ~/workspace/repo3
+    )
+
+Or it you can use wildcards like:
+    export git_repos=(~/workspace/client-*)
+'
+export WORKSPACE=~/workspace
+
 if [ -f ~/.zshrc-pre-init ]; then
     . ~/.zshrc-pre-init
 fi
@@ -19,7 +33,6 @@ export PATH=$PATH:/usr/local
 export PATH=$PATH:$HOME/.fastlane/bin
 export PATH=$PATH:$HOME/.rbenv/bin
 export PATH=$PATH:/usr/local/opt/mysql-client/bin
-export WORKSPACE=~/workspace
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -197,7 +210,7 @@ alias show_options='shopt'                  # Show_options: display bash options
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
-alias zshrc='. ~/zshrc'
+alias zshrc='. ~/.zshrc'
 alias ~="cd ~"                              # ~:            Go Home
 alias yui="yarn upgrade-interactive"
 
@@ -233,6 +246,150 @@ brewup () {
     brew cleanup
 
     echo Done!
+}
+
+gitsyncall () {
+    local dirty_repos=()
+
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        if [ -n "$(git status --porcelain)" ]; then            
+            dirty_repos+=($repo)
+        else
+            echo "********************************************************************************"
+            echo "Synching git repo: $repo..."
+            git up
+            git pushf
+            git com
+            git up
+            git pushf
+            git co -
+        fi
+        
+        popd &> /dev/null
+    done
+
+    if [ ${#dirty_repos[@]} -gt 0 ]; then
+        echo "\nThe following repos were skipped because they had pending changes:"
+
+        for dirty_repo in $dirty_repos            
+        do
+            echo "   $dirty_repo"
+        done
+    fi
+}
+
+gitstall () {
+    local clean_repos=()
+
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        if [ -n "$(git status --porcelain)" ]; then   
+            echo "********************************************************************************"
+            echo "git status: $repo..."
+            git st                     
+        else
+            clean_repos+=($repo)
+        fi
+
+        popd &> /dev/null
+    done
+
+    if [ ${#clean_repos[@]} -gt 0 ]; then
+        echo "\nThe following repos were skipped because they had no pending changes:"
+
+        for clean_repo in $clean_repos            
+        do
+            echo "   $clean_repo"
+        done
+    fi
+}
+
+gitgcall () {
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Performing maintenance on git repo: $repo..."
+        gitgc
+
+        popd &> /dev/null
+    done
+}
+
+gitgc () {
+    git maintenance run --task gc
+}
+
+gitpruneall () {
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Looking for local branches to delete from git repo: $repo..."
+        gitprune
+
+        popd &> /dev/null
+    done
+}
+
+gitprune () {
+    local branch_names=()
+
+    git branch | grep -v '^*\|master\|main' | while read -r branch
+    do
+        branch_names+=($branch)
+    done
+
+    if [ ${#branch_names[@]} -gt 0 ]; then
+        echo "\nLocal branches:"
+        printf '%s\n   ' "${branch_names[@]}"
+        echo ""
+
+        if read -q "choice?Are you sure you want to remove these branches? (y/n): "; then
+            for branch in $branch_names
+            do
+                git branch -D $branch
+            done       
+        else
+            echo "\nNo branches were deleted."
+        fi
+    else
+        echo "There are no local branches to delete."
+    fi
+}
+
+rmdss() {
+    sudo find . -name .DS_Store
+    echo "\n"
+
+    if read -q "choice?Are you sure you want to remove these folders? (y/n): "; then
+        sudo find . -name .DS_Store -delete
+        killall Finder    
+    else
+        echo "No folders were deleted."
+    fi
+}
+
+remind() {
+    echo "git:"
+    echo "- Delete remote branch: git push origin --delete branch_name"
+    echo "- Stop tracking a file: git update-index --assume-unchanged [<file>...]"
+    echo "- Fix 'refs/remotes/origin/HEAD is not a symbolic ref' error when using git com alias: git remote set-head origin master"
+    echo
+    echo 'Docker:'
+    echo "- Remove all Docker images: docker rmi \$(docker images -q) --force"
+    echo
+    echo "MacOS:"
+    echo "- Capture screenshot of entire screen: Command + Shift + 3"
+    echo "- Capture screenshot of selectable portion of screen: Command + Shift + 4"
+    echo "- Capture screenshot with options: Command + Shift + 5"
 }
 
 # Setup GIT prompt (based on https://joshdick.net/2017/06/08/my_git_prompt_for_zsh_revisited.html)
@@ -314,8 +471,16 @@ if [ -f ~/.zshrc-post-init ]; then
     . ~/.zshrc-post-init
 fi
 
-if command -v pyenv 1>/dev/null 2>&1; then
+if type pyenv > /dev/null; then
   eval "$(pyenv init -)"
+fi
+
+if type rbenv > /dev/null; then
+    eval "$(rbenv init -)"
+fi
+
+if type direnv > /dev/null; then
+    eval "$(direnv hook zsh)"
 fi
 
 if [[ -v $CLEAR_SCREEN_ON_STARTUP ]]; then

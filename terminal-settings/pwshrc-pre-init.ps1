@@ -10,3 +10,5 @@ $goToWorkspaceOnStartup = $false
 $clearScreenOnStartup = $false
 $workspace = "~/workspace"
 $debug = $false
+
+$gitRepos = @()

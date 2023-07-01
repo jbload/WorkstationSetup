@@ -4,6 +4,19 @@ export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
 
+export git_repos=()
+: '
+This could be set explicitly like:
+    export git_repos=(
+        ~/workspace/repo1
+        ~/workspace/repo2
+        ~/workspace/repo3
+    )
+
+Or it you can use wildcards like:
+    export git_repos=(~/workspace/client-*)
+'
+export WORKSPACE=~/workspace
 if [ -f ~/.bashrc-pre-init ]; then
     . ~/.bashrc-pre-init
 fi
@@ -16,6 +29,10 @@ shopt -s checkwinsize
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
+# If you come from bash you might have to change your $PATH.
+export PATH=$PATH:$HOME/bin
+export PATH=$PATH:/usr/local/bin/
+export PATH=$PATH:/usr/local
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -94,23 +111,24 @@ if [ -f $HOME/.kube/config ]; then
     export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
 fi
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$PATH:$HOME/bin
-export PATH=$PATH:/usr/local/bin/
-export PATH=$PATH:/usr/local
-
 # User configuration
-if type subl > /dev/null; then
+if command -v subl &> /dev/null; then
     editor_path=$(which subl)
     alias edit='subl'    
-elif type code-insiders > /dev/null; then
-    editor_path=$(which code-insiders)        
-    alias edit='code-insiders'
-elif type code > /dev/null; then
+elif command -v code &> /dev/null; then
     editor_path=$(which code)        
-    alias edit='code'    
+    alias edit='code'
+elif command -v code-insiders &> /dev/null; then
+    editor_path=$(which code-insiders)        
+    alias edit='code-insiders'    
 else
     alias edit='vi'
+fi
+
+if command -v vim &> /dev/null; then
+    export KUBE_EDITOR=vim
+else
+    export KUBE_EDITOR=vi
 fi
 
 if [ -f $editor_path ]; then
@@ -123,7 +141,6 @@ export BLOCKSIZE=1k
 export NODE_OPTIONS=--max_old_space_size=8192
 export PIPENV_VENV_IN_PROJECT=1
 export ASPNETCORE_ENVIRONMENT=Development
-export WORKSPACE=~/workspace
 
 # You may need to manually set your language environment
 export LC_ALL=en_US.UTF-8
@@ -178,6 +195,126 @@ ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in Ma
 trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
 zipf () { zip -r "$1".zip "$1" ; }          # zipf:         To create a ZIP archive of a folder
 
+gitsyncall () {
+    local dirty_repos=()
+
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        if [ -n "$(git status --porcelain)" ]; then            
+            dirty_repos+=($repo)
+        else
+            echo "********************************************************************************"
+            echo "Synching git repo: $repo..."
+            git up
+            git pushf
+            git com
+            git up
+            git pushf
+            git co -
+        fi
+        
+        popd &> /dev/null
+    done
+
+    if [ ${#dirty_repos[@]} -gt 0 ]; then
+        echo "\nThe following repos were skipped because they had pending changes:"
+
+        for dirty_repo in $dirty_repos            
+        do
+            echo "   $dirty_repo"
+        done
+    fi
+}
+
+gitstall () {
+    local clean_repos=()
+
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        if [ -n "$(git status --porcelain)" ]; then   
+            echo "********************************************************************************"
+            echo "git status: $repo..."
+            git st                     
+        else
+            clean_repos+=($repo)
+        fi
+
+        popd &> /dev/null
+    done
+
+    if [ ${#clean_repos[@]} -gt 0 ]; then
+        echo "\nThe following repos were skipped because they had no pending changes:"
+
+        for clean_repo in $clean_repos            
+        do
+            echo "   $clean_repo"
+        done
+    fi
+}
+
+gitgcall () {
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Performing maintenance on git repo: $repo..."
+        gitgc
+
+        popd &> /dev/null
+    done
+}
+
+gitgc () {
+    git maintenance run --task gc
+}
+
+gitpruneall () {
+    for repo in $git_repos
+    do
+        pushd $repo &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Looking for local branches to delete from git repo: $repo..."
+        gitclean
+
+        popd &> /dev/null
+    done
+}
+
+gitprune () {
+    local branch_names=()
+
+    git branch | grep -v '^*\|master\|main' | while read -r branch
+    do
+        branch_names+=($branch)
+    done
+
+    if [ ${#branch_names[@]} -gt 0 ]; then
+        echo "\nLocal branches:"
+        printf '%s\n   ' "${branch_names[@]}"
+        echo ""
+
+        if read -q "choice?Are you sure you want to remove these branches? (y/n): "; then
+            for branch in $branch_names
+            do
+                git branch -D $branch
+            done       
+        else
+            echo "\nNo branches were deleted."
+        fi
+    else
+        echo "There are no local branches to delete."
+    fi
+}
+
+    gitgc
+}
+
 # https://github.com/magicmonty/bash-git-prompt
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
@@ -193,6 +330,18 @@ fi
 
 if [ -f ~/.bashrc-post-init ]; then
     . ~/.bashrc-post-init
+fi
+
+if command -v pyenv &> /dev/null; then
+  eval "$(pyenv init -)"
+fi
+
+if command -v rbenv &> /dev/null; then
+    eval "$(rbenv init -)"
+fi
+
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook bash)"
 fi
 
 if [[ -v $CLEAR_SCREEN_ON_STARTUP ]]; then
