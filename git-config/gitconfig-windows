@@ -5,7 +5,9 @@
 	ac = !git add -A && git commit -m
 	adc = !git add -A && git duet-commit -m
 	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
-	amend = commit -a --amend
+	aaamend = !git aa && git amend
+	aaamendit = !git aa && git amendit
+	amend = commit --amend
 	amendit = commit --amend --no-edit
 	bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
 	bdone = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT} && git up && git bclean ${1-$DEFAULT}; }; f"
