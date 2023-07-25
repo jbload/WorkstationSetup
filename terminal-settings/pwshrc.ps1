@@ -9,6 +9,7 @@ $useHelm = $true
 $goToWorkspaceOnStartup = $false
 $clearScreenOnStartup = $false
 $workspace = "~/workspace"
+$gitPushDuringSync = $true
 $gitRepos = @()
 $debug = $false
 
@@ -213,10 +214,18 @@ function gitsyncall() {
             Write-Host "********************************************************************************"
             Write-Host "Synching git repo: $repo..."
             git up
-            git pushf
+
+            if($gitPushDuringSync) {
+                git pushf
+            }
+
             git com
             git up
-            git pushf
+
+            if($gitPushDuringSync) {
+                git pushf
+            }
+
             git co -
         }
         

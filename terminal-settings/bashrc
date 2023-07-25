@@ -4,6 +4,8 @@ export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
 
+
+export git_push_during_sync=1
 export git_repos=()
 : '
 This could be set explicitly like:
@@ -208,10 +210,18 @@ gitsyncall () {
             echo "********************************************************************************"
             echo "Synching git repo: $repo..."
             git up
-            git pushf
+
+            if [ $git_push_during_sync -eq 1 ]; then
+                git pushf
+            fi
+
             git com
             git up
-            git pushf
+            
+            if [ $git_push_during_sync -eq 1 ]; then
+                git pushf
+            fi
+
             git co -
         fi
         
@@ -280,7 +290,7 @@ gitpruneall () {
 
         echo "********************************************************************************"
         echo "Looking for local branches to delete from git repo: $repo..."
-        gitclean
+        gitprune
 
         popd &> /dev/null
     done
