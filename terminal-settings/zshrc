@@ -214,6 +214,7 @@ alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias zshrc='. ~/.zshrc'
 alias ~="cd ~"                              # ~:            Go Home
+alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
 
 cd () { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'

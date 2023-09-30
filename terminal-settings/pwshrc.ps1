@@ -177,12 +177,14 @@ function editpsrc { edit ~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1
 function editgitconfig { edit ~/.gitconfig }
 function f { explorer . }
 function flushDNS { ipconfig /flushdns }
+function gui { gradle-upgrade-interactive }
 function ipInfo { ipconfig /all }
 function ll { ls }
 function myip { curl https://dynamicdns.park-your-domain.com/getip }
 function path { Write-Host ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
+function yarnup { yarn set version stable }
 function yui { yarn upgrade-interactive }
 
 Remove-Item Alias:cd
