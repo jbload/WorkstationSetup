@@ -34,6 +34,7 @@ export PATH=$PATH:/usr/local/bin/
 export PATH=$PATH:/usr/local
 export PATH=$PATH:$HOME/.fastlane/bin
 export PATH=$PATH:$HOME/.rbenv/bin
+export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:/usr/local/opt/mysql-client/bin
 
 # Path to your oh-my-zsh installation.
@@ -195,6 +196,7 @@ alias editzshrc='edit ~/.zshrc'
 alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
 alias fix_stty='stty sane'                  # fix_stty:     Restore terminal settings when screwed up
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
+alias gui=gradle-upgrade-interactive
 alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on connections for en0
 alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
 alias less='less -FSRXc'                    # Preferred 'less' implementation

@@ -5,8 +5,8 @@
 	ac = !git add -A && git commit -m
 	adc = !git add -A && git duet-commit -m
 	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
-	aaamend = !git aa && git amend
-	aaamendit = !git aa && git amendit
+	aamend = !git aa && git amend
+	aamendit = !git aa && git amendit
 	amend = commit --amend
 	amendit = commit --amend --no-edit
 	bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
@@ -53,7 +53,7 @@
 	stashes = stash list
 	sync = !git pull --rebase && git push
 	undo = reset HEAD~1 --mixed
-	unstage = reset -q HEAD --
+	unstage = restore --staged
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
 	wip = !git add -u && git commit -m "WIP"
 	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
