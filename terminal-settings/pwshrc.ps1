@@ -9,7 +9,7 @@ $useHelm = $true
 $goToWorkspaceOnStartup = $false
 $clearScreenOnStartup = $false
 $workspace = "~/workspace"
-$gitPushDuringSync = $true
+$gitPushDuringSync = $false
 $gitRepos = @()
 $debug = $false
 

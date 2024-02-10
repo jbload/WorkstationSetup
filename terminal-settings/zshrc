@@ -4,19 +4,18 @@ export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
 
-
-export git_push_during_sync=1
-export git_repos=()
+export GIT_PUSH_DURING_SYNC=0
+export GIT_REPOS=()
 : '
 This could be set explicitly like:
-    export git_repos=(
+    export GIT_REPOS=(
         ~/workspace/repo1
         ~/workspace/repo2
         ~/workspace/repo3
     )
 
 Or it you can use wildcards like:
-    export git_repos=(~/workspace/client-*)
+    export GIT_REPOS=(~/workspace/client-*)
 '
 export WORKSPACE=~/workspace
 
@@ -204,20 +203,30 @@ alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
 alias lsockT='sudo /usr/sbin/lsof -nP | grep TCP'   # lsockT:       Display only open TCP sockets
 alias lsockU='sudo /usr/sbin/lsof -nP | grep UDP'   # lsockU:       Display only open UDP sockets
+alias mact='mvn clean test'
+alias macv='mvn clean verify'
+alias madana='mvn dependency:analyze'
+alias madtree='mvn dependency:tree'
+alias maout='mvn versions:display-property-updates && ./mvnw versions:display-dependency-updates && ./mvnw versions:display-plugin-updates'
+alias mat='mvn test'
+alias maup='mvn versions:use-latest-versions'
+alias mav='mvn verify'
+alias mawrap='mvn wrapper:wrapper'
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias myip='curl https://dynamicdns.park-your-domain.com/getip'                    # myip:         Public facing IP Address
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
 alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listening connections
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
+alias prprep='mvn -U clean verify'
 alias show_options='shopt'                  # Show_options: display bash options settings
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
-alias zshrc='. ~/.zshrc'
-alias ~="cd ~"                              # ~:            Go Home
 alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
+alias zshrc='. ~/.zshrc'
+alias ~="cd ~"                              # ~:            Go Home
 
 cd () { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and jumps inside
@@ -256,7 +265,7 @@ brewup () {
 gitsyncall () {
     local dirty_repos=()
 
-    for repo in $git_repos
+    for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
 
@@ -267,14 +276,14 @@ gitsyncall () {
             echo "Synching git repo: $repo..."
             git up
 
-            if [ $git_push_during_sync -eq 1 ]; then
+            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
                 git pushf
             fi
 
             git com
             git up
             
-            if [ $git_push_during_sync -eq 1 ]; then
+            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
                 git pushf
             fi
 
@@ -297,7 +306,7 @@ gitsyncall () {
 gitstall () {
     local clean_repos=()
 
-    for repo in $git_repos
+    for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
 
@@ -323,7 +332,7 @@ gitstall () {
 }
 
 gitgcall () {
-    for repo in $git_repos
+    for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
 
@@ -340,7 +349,7 @@ gitgc () {
 }
 
 gitpruneall () {
-    for repo in $git_repos
+    for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
 
@@ -485,7 +494,11 @@ if [ -f ~/.zshrc-post-init ]; then
 fi
 
 if type pyenv > /dev/null; then
-  eval "$(pyenv init -)"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    export PKG_CONFIG_PATH="$(brew --prefix)/opt/mysql-client/lib/pkgconfig"
+    export PYENV_ROOT="$HOME/.pyenv"
+    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 fi
 
 if type rbenv > /dev/null; then
