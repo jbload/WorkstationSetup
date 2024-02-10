@@ -22,7 +22,7 @@ brew install --cask font-cascadia-code-pl
 brew install --cask font-cascadia-mono
 brew install --cask font-cascadia-mono-pl
 brew install --cask iterm2
-brew install --cask logitech-options
+brew install --cask logi-options-plus
 brew install --cask miro
 brew install --cask postman
 brew install --cask powershell
@@ -65,6 +65,11 @@ corepack enable
 brew install pyenv
 brew install python@3.11
 
+# Browsers
+brew install --cask firefox
+brew install --cask google-chrome
+brew install --cask microsoft-edge
+
 # Miscellaneous
 brew install awscli
 brew install kafka
@@ -76,7 +81,6 @@ brew install sentry-cli
 brew install swagger-codegen
 brew install terraform
 brew install --cask docker
-brew install --cask microsoft-edge
 brew install --cask microsoft-remote-desktop
 #brew install --cask orbstack
 brew install --cask sf-symbols
