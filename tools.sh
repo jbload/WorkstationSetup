@@ -2,34 +2,32 @@
 
 #Core
 brew tap git-duet/tap
-brew tap homebrew/cask-drivers
 brew tap homebrew/cask-fonts
 brew tap homebrew/cask-versions
+brew install ack
 brew install coreutils
 brew install direnv
-#brew install fig
+brew install fig
 brew install git
 brew install git-duet
+brew install git-lfs
+brew install httpie
 brew install jq
+brew install prettier
 brew install vim
 brew install yq
 brew install --cask appcleaner
 brew install --cask beyond-compare
-brew install --cask boop
-brew install --cask drawio
 brew install --cask font-cascadia-code
 brew install --cask font-cascadia-code-pl
 brew install --cask font-cascadia-mono
 brew install --cask font-cascadia-mono-pl
 brew install --cask iterm2
-brew install --cask logi-options-plus
-brew install --cask miro
 brew install --cask postman
-brew install --cask powershell
 brew install --cask rectangle
-brew install --cask sourcetree
 brew install --cask sublime-text
 brew install --cask visual-studio-code
+brew install --cask warp
 
 # Java
 brew tap spring-io/tap
@@ -37,7 +35,13 @@ brew install gradle
 brew install maven
 brew install spring-boot
 brew install --cask jetbrains-toolbox
-brew install --cask temurin17
+brew install --cask temurin
+npm install gradle-upgrade-interactive -g
+
+# JavaScript/TypeScript
+brew install node@20 && brew link --overwrite node@20
+corepack enable
+npm install @angular/cli -g
 
 # .NET
 brew install --cask dotnet-sdk
@@ -56,21 +60,17 @@ brew install kubernetes-cli
 brew tap ubuntu/microk8s
 brew install microk8s
 
-# Node
-brew install corepack
-brew install node@18
-corepack enable
-
 # Python
 brew install pyenv
-brew install python@3.11
+brew install pyenv-virtualenv
+pyenv install 3.11 && pyenv global 3.11
 
 # Browsers
 brew install --cask firefox
 brew install --cask google-chrome
 brew install --cask microsoft-edge
 
-# Miscellaneous
+# Miscellaneous/Optional
 brew install awscli
 brew install kafka
 brew install mysql
@@ -80,10 +80,15 @@ brew install redis
 brew install sentry-cli
 brew install swagger-codegen
 brew install terraform
+brew install --cask boop
 brew install --cask docker
+brew install --cask drawio
 brew install --cask microsoft-remote-desktop
-#brew install --cask orbstack
+brew install --cask miro
+brew install --cask orbstack
+brew install --cask powershell
 brew install --cask sf-symbols
 brew install --cask slack
+brew install --cask sourcetree
 brew install --cask vlc
 brew install --cask zoom
