@@ -43,6 +43,7 @@
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
+	rbm = rebase master
 	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
 	reword = commit --amend
@@ -61,31 +62,28 @@
 	autosetuprebase = always
 [core]
 	editor = code --wait
-	excludesfile = ~/.gitignore_global
-	hooksPath = ~/workspace/git-hooks-core
-	autocrlf = input
 [diff]
 	tool = bc
 [difftool]
 	prompt = false
 [http]
 	postBuffer = 524288000
-[init]
-	defaultBranch = master
-	templateDir = ~/workspace/git-templates	
+[include]
+    path = .gitconfig_custom	
 [merge]
 	tool = bc
 [mergetool]
 	keepBackup = false
 	prompt = false
 [mergetool "bc"]
-	trustExitCode = true
+	trustExitCode = true    
 [pull]
-	rebase = true
+	rebase = true    
+[rerere]
+	enabled = true
 [trailer]
 	ifexists = addIfDifferent	
 [transfer]
-	fsckobjects = true
+	fsckobjects = true	
 [user]
-	email = jbload@users.noreply.github.com
 	name = Justin Loadholtz

@@ -1,0 +1,9 @@
+[core]
+	autocrlf = input
+	excludesfile = ~/.gitignore
+	hooksPath = ~/git-hooks
+[init]
+	defaultBranch = master
+	templateDir = ~/git-templates	
+[user]
+	email = jbload@users.noreply.github.com
