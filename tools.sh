@@ -73,6 +73,7 @@ brew install --cask microsoft-edge
 # Miscellaneous/Optional
 brew install awscli
 brew install kafka
+brew install liquibase
 brew install mysql
 brew install mysql-client
 brew install rabbitmq
@@ -82,7 +83,9 @@ brew install swagger-codegen
 brew install terraform
 brew install --cask boop
 brew install --cask docker
+brew install --cask downie
 brew install --cask drawio
+brew install --cask iina
 brew install --cask microsoft-remote-desktop
 brew install --cask miro
 brew install --cask orbstack

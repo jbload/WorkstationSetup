@@ -1,6 +1,7 @@
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
+export HOMEBREW_AUTOREMOVE=1
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
 
@@ -184,55 +185,58 @@ alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
-alias cic='set completion-ignore-case On'   # cic:          Make tab-completion case-insensitive
-alias cl='clear'                            # cl:           Clear terminal display
-alias cls='clear'                           # cls:          Clear terminal display
+alias cic='set completion-ignore-case On'   # cic: Make tab-completion case-insensitive
+alias cl='clear'                            # cl: Clear terminal display
+alias cls='clear'                           # cls: Clear terminal display
 alias cp='cp -iv'                           # Preferred 'cp' implementation
-alias DT='tee ~/Desktop/terminalOut.txt'    # DT:           Pipe content to file on MacOS Desktop
+alias DT='tee ~/Desktop/terminalOut.txt'    # DT: Pipe content to file on MacOS Desktop
 alias editbashrc='edit ~/.bashrc'
 alias editgitconfig='edit ~/.gitconfig'
 alias editzshrc='edit ~/.zshrc'
-alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
-alias fix_stty='stty sane'                  # fix_stty:     Restore terminal settings when screwed up
-alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
+alias epoch='gdate +%s%3N'                  # Milliseconds since epoch. Requires: brew install coreutils 
+alias f='open -a Finder ./'                 # f: Opens current directory in MacOS Finder
+alias fix_stty='stty sane'                  # fix_stty: Restore terminal settings when screwed up
+alias flushDNS='dscacheutil -flushcache'    # flushDNS: Flush out the DNS Cache
 alias gui=gradle-upgrade-interactive
-alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on connections for en0
-alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
+alias ipInfo0='ipconfig getpacket en0'      # ipInfo0: Get info on connections for en0
+alias ipInfo1='ipconfig getpacket en1'      # ipInfo1: Get info on connections for en1
 alias less='less -FSRXc'                    # Preferred 'less' implementation
 alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
-alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
-alias lsockT='sudo /usr/sbin/lsof -nP | grep TCP'   # lsockT:       Display only open TCP sockets
-alias lsockU='sudo /usr/sbin/lsof -nP | grep UDP'   # lsockU:       Display only open UDP sockets
+alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock: Display open sockets
+alias lsockT='sudo /usr/sbin/lsof -nP | grep TCP'   # lsockT: Display only open TCP sockets
+alias lsockU='sudo /usr/sbin/lsof -nP | grep UDP'   # lsockU: Display only open UDP sockets
 alias mact='mvn clean test'
 alias macv='mvn clean verify'
 alias madana='mvn dependency:analyze'
 alias madtree='mvn dependency:tree'
 alias maout='mvn versions:display-property-updates && ./mvnw versions:display-dependency-updates && ./mvnw versions:display-plugin-updates'
+alias mapc='mvn prettier:check'
+alias mapw='mvn prettier:write'
 alias mat='mvn test'
 alias maup='mvn versions:use-latest-versions'
 alias mav='mvn verify'
 alias mawrap='mvn wrapper:wrapper'
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
-alias myip='curl https://dynamicdns.park-your-domain.com/getip'                    # myip:         Public facing IP Address
-alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
-alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listening connections
-alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
+alias myip='curl https://dynamicdns.park-your-domain.com/getip' # myip: Public facing IP Address
+alias netCons='lsof -i'                     # netCons: Show all open TCP/IP sockets
+alias openPorts='sudo lsof -i | grep LISTEN' # openPorts: All listening connections
+alias path='echo -e ${PATH//:/\\n}'         # path: Echo all executable Paths
 alias prprep='mvn -U clean verify'
 alias show_options='shopt'                  # Show_options: display bash options settings
-alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
+alias showBlocked='sudo ipfw list'          # showBlocked: All ipfw rules inc/ blocked IPs
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
 alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
 alias zshrc='. ~/.zshrc'
-alias ~="cd ~"                              # ~:            Go Home
+alias ~="cd ~"                              # ~: Go Home
 
 cd () { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
-mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and jumps inside
-ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in MacOS Quicklook Preview
-trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
-zipf () { zip -r "$1".zip "$1" ; }          # zipf:         To create a ZIP archive of a folder
+mcd () { mkdir -p "$1" && cd "$1"; }        # mcd: Makes new Dir and jumps inside
+ql () { qlmanage -p "$*" >& /dev/null; }    # ql: Opens any file in MacOS Quicklook Preview
+trash () { command mv "$@" ~/.Trash ; }     # trash: Moves a file to the MacOS trash
+zipf () { zip -r "$1".zip "$1" ; }          # zipf: To create a ZIP archive of a folder
 
 ii () {
     echo -e "\nYou are logged on ${RED}$HOST"
