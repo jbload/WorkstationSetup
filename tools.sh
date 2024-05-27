@@ -70,6 +70,16 @@ brew install --cask firefox
 brew install --cask google-chrome
 brew install --cask microsoft-edge
 
+# Music
+brew install --cask guitar-pro
+brew install --cask musescore
+
+# Media
+brew install --cask downie
+brew install --cask iina
+brew install --cask permute
+brew install --cask vlc
+
 # Miscellaneous/Optional
 brew install awscli
 brew install kafka
@@ -83,9 +93,7 @@ brew install swagger-codegen
 brew install terraform
 brew install --cask boop
 brew install --cask docker
-brew install --cask downie
 brew install --cask drawio
-brew install --cask iina
 brew install --cask microsoft-remote-desktop
 brew install --cask miro
 brew install --cask orbstack
@@ -93,5 +101,4 @@ brew install --cask powershell
 brew install --cask sf-symbols
 brew install --cask slack
 brew install --cask sourcetree
-brew install --cask vlc
 brew install --cask zoom
