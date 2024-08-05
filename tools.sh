@@ -84,6 +84,7 @@ brew install --cask vlc
 brew install awscli
 brew install kafka
 brew install liquibase
+brew install meetingbar
 brew install mysql
 brew install mysql-client
 brew install rabbitmq
