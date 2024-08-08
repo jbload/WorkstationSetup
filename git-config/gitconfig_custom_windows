@@ -6,11 +6,11 @@
 [credential]
 	helper = wincred	
 [difftool "bc"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe	
+	path = c:/Program Files/Beyond Compare 5/bcomp.exe	
 [init]
 	defaultBranch = master
 	templateDir = ~/git-templates	
 [mergetool "bc"]
-	path = c:/Program Files/Beyond Compare 4/bcomp.exe	
+	path = c:/Program Files/Beyond Compare 5/bcomp.exe	
 [user]
 	email = jbload@users.noreply.github.com
