@@ -47,6 +47,7 @@
 	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
 	reword = commit --amend
+	rhh = reset HEAD --hard
 	save = !git add -A && git commit -m 'SAVEPOINT'
 	squash = commit --squash
 	st = status
