@@ -93,6 +93,7 @@ brew install sentry-cli
 brew install swagger-codegen
 brew install terraform
 brew install --cask boop
+brew install --cask chatgpt
 brew install --cask docker
 brew install --cask drawio
 brew install --cask microsoft-remote-desktop
