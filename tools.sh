@@ -39,7 +39,7 @@ brew install --cask temurin
 npm install gradle-upgrade-interactive -g
 
 # JavaScript/TypeScript
-brew install node@20 && brew link --overwrite node@20
+brew install node@22 && brew link --overwrite node@22
 corepack enable
 npm install @angular/cli -g
 
@@ -63,7 +63,7 @@ brew install microk8s
 # Python
 brew install pyenv
 brew install pyenv-virtualenv
-pyenv install 3.11 && pyenv global 3.11
+pyenv install 3.12 && pyenv global 3.12
 
 # Browsers
 brew install --cask firefox
@@ -80,6 +80,10 @@ brew install --cask iina
 brew install --cask permute
 brew install --cask vlc
 
+# AI
+brew install ollama
+brew install --cask chatgpt
+
 # Miscellaneous/Optional
 brew install awscli
 brew install kafka
@@ -93,7 +97,6 @@ brew install sentry-cli
 brew install swagger-codegen
 brew install terraform
 brew install --cask boop
-brew install --cask chatgpt
 brew install --cask docker
 brew install --cask drawio
 brew install --cask microsoft-remote-desktop
