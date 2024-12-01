@@ -83,6 +83,7 @@ brew install --cask vlc
 # AI
 brew install ollama
 brew install --cask chatgpt
+brew install --cask cursor
 
 # Miscellaneous/Optional
 brew install awscli
