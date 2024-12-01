@@ -100,6 +100,7 @@ brew install terraform
 brew install --cask boop
 brew install --cask docker
 brew install --cask drawio
+brew install --cask imazing
 brew install --cask microsoft-remote-desktop
 brew install --cask miro
 brew install --cask orbstack
