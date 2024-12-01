@@ -196,6 +196,7 @@ alias editzshrc='edit ~/.zshrc'
 alias epoch='gdate +%s%3N'                  # Milliseconds since epoch. Requires: brew install coreutils 
 alias f='open -a Finder ./'                 # f: Opens current directory in MacOS Finder
 alias fix_stty='stty sane'                  # fix_stty: Restore terminal settings when screwed up
+alias flb='bundle exec fastlane beta'
 alias flushDNS='dscacheutil -flushcache'    # flushDNS: Flush out the DNS Cache
 alias gui=gradle-upgrade-interactive
 alias ipInfo0='ipconfig getpacket en0'      # ipInfo0: Get info on connections for en0
