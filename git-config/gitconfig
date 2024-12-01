@@ -14,7 +14,7 @@
 	br = branch
 	branches = branch -a
 	churn = !git --no-pager log --name-only --oneline | grep -v ' ' | sort | uniq -c | sort -nr | head
-	ci = commit -m
+	cm = commit -m
 	co = checkout
 	cob = checkout -b
 	com = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
