@@ -49,7 +49,6 @@ brew install --cask dotnet-sdk
 # iOS
 brew install carthage
 brew install fastlane
-brew install swiftlint
 
 # Kubernetes
 brew install helm
