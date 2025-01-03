@@ -82,6 +82,7 @@ brew install --cask vlc
 # AI
 brew install ollama
 brew install --cask chatgpt
+brew install --cask claude
 brew install --cask cursor
 
 # Miscellaneous/Optional
