@@ -221,6 +221,7 @@ alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias myip='curl https://dynamicdns.park-your-domain.com/getip' # myip: Public facing IP Address
 alias netCons='lsof -i'                     # netCons: Show all open TCP/IP sockets
+alias npmup='npm update -g'
 alias openPorts='sudo lsof -i | grep LISTEN' # openPorts: All listening connections
 alias path='echo -e ${PATH//:/\\n}'         # path: Echo all executable Paths
 alias prprep='mvn -U clean verify'
