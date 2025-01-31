@@ -233,6 +233,7 @@ alias swl='swift format lint --parallel --recursive --in-place'
 alias swla='swift format lint --parallel --recursive --in-place .'
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
+alias xcsr='xcrun simctl erase all'         # Simulator Reset
 alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
 alias zshrc='. ~/.zshrc'

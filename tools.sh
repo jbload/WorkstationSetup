@@ -75,6 +75,7 @@ brew install --cask musescore
 
 # Media
 brew install --cask downie
+brew install ffmpeg
 brew install --cask iina
 brew install --cask permute
 brew install --cask vlc
