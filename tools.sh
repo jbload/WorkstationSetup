@@ -81,10 +81,15 @@ brew install --cask permute
 brew install --cask vlc
 
 # AI
+brew install gh
+gh auth login
+gh extension install github/gh-copilot
 brew install ollama
 brew install --cask chatgpt
 brew install --cask claude
 brew install --cask cursor
+brew install --cask github-copilot-for-xcode
+brew install --cask lm-studio
 
 # Miscellaneous/Optional
 brew install awscli

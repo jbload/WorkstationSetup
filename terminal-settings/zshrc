@@ -31,10 +31,11 @@ autoload -U +X bashcompinit && bashcompinit
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:/usr/local/bin/
 export PATH=$PATH:/usr/local
-export PATH=$PATH:$HOME/.fastlane/bin
-export PATH=$PATH:$HOME/.rbenv/bin
-export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:/usr/local/opt/mysql-client/bin
+export PATH=$PATH:$HOME/.fastlane/bin
+export PATH=$PATH:$HOME/.lmstudio/bin
+export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/.rbenv/bin
 export PATH=$PATH:"$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # Path to your oh-my-zsh installation.
@@ -198,6 +199,8 @@ alias f='open -a Finder ./'                 # f: Opens current directory in MacO
 alias fix_stty='stty sane'                  # fix_stty: Restore terminal settings when screwed up
 alias flb='bundle exec fastlane beta'
 alias flushDNS='dscacheutil -flushcache'    # flushDNS: Flush out the DNS Cache
+alias ghce='gh copilot explain'
+alias ghcs='gh copilot suggest'
 alias gui=gradle-upgrade-interactive
 alias ipInfo0='ipconfig getpacket en0'      # ipInfo0: Get info on connections for en0
 alias ipInfo1='ipconfig getpacket en1'      # ipInfo1: Get info on connections for en1
