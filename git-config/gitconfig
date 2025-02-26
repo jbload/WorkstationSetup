@@ -2,11 +2,11 @@
 	skippedCherryPicks = false
 [alias]
 	aa = add -A
+	aamend = !git aa && git amend
+	aamendit = !git aa && git amendit
 	ac = !git add -A && git commit -m
 	adc = !git add -A && git duet-commit -m
 	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
-	aamend = !git aa && git amend
-	aamendit = !git aa && git amendit
 	amend = commit --amend
 	amendit = commit --amend --no-edit
 	bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
@@ -22,9 +22,9 @@
 	contrib = shortlog -e --summary --numbered
 	cp = cherry-pick
 	dci = duet-commit
-	dmg = duet-merge
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 	di = diff
+	dmg = duet-merge
 	drb = rebase -i --exec 'git duet-commit --amend'
 	drv = duet-revert
 	ds = diff --staged
@@ -38,8 +38,8 @@
 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	prn = "!f() { git tag -l | xargs git tag -d; git fetch --tags && git fetch --prune && git gc; }; f"
-	pushup = !git push -u origin HEAD
 	pushf = pushup --force-with-lease
+	pushup = !git push -u origin HEAD
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
@@ -61,16 +61,30 @@
 	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
 [branch]
 	autosetuprebase = always
+	sort = -committerdate
+[column]
+    	ui = auto
 [core]
 	editor = code --wait
+	excludesfile = /Users/jloadholtz/.gitignore_global
+	hooksPath = /Users/jloadholtz/.git_hooks
 [diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 	tool = bc
 [difftool]
 	prompt = false
+[fetch]
+	all = true
+	prune = true
+[help]
+	autocorrect = prompt
 [http]
 	postBuffer = 524288000
 [include]
-    path = .gitconfig_custom	
+	path = .gitconfig_custom	
 [merge]
 	tool = bc
 [mergetool]
@@ -80,8 +94,19 @@
 	trustExitCode = true    
 [pull]
 	rebase = true    
+[push]
+	autoSetupRemote = true
+	default = simple
+	followTags = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
 [rerere]
+	autoupdate = true
 	enabled = true
+[tag]
+	sort = version:refname
 [trailer]
 	ifexists = addIfDifferent	
 [transfer]
