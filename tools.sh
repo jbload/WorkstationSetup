@@ -14,6 +14,7 @@ brew install git-lfs
 brew install httpie
 brew install jq
 brew install prettier
+brew install ripgrep
 brew install vim
 brew install yq
 brew install --cask appcleaner
@@ -63,6 +64,7 @@ brew install microk8s
 brew install pyenv
 brew install pyenv-virtualenv
 pyenv install 3.12 && pyenv global 3.12
+brew install jupyterlab
 
 # Browsers
 brew install --cask firefox
@@ -90,6 +92,7 @@ brew install --cask claude
 brew install --cask cursor
 brew install --cask github-copilot-for-xcode
 brew install --cask lm-studio
+npm install -g @anthropic-ai/claude-code
 
 # Miscellaneous/Optional
 brew install awscli

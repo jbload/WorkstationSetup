@@ -66,8 +66,6 @@
     	ui = auto
 [core]
 	editor = code --wait
-	excludesfile = /Users/jloadholtz/.gitignore_global
-	hooksPath = /Users/jloadholtz/.git_hooks
 [diff]
 	algorithm = histogram
 	colorMoved = plain
