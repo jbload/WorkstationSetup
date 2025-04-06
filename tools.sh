@@ -38,6 +38,7 @@ brew install spring-boot
 brew install --cask jetbrains-toolbox
 brew install --cask temurin
 npm install gradle-upgrade-interactive -g
+#-Deditor.distraction.free.mode=true
 
 # JavaScript/TypeScript
 brew install node@22 && brew link --overwrite node@22
@@ -65,6 +66,7 @@ brew install pyenv
 brew install pyenv-virtualenv
 pyenv install 3.12 && pyenv global 3.12
 brew install jupyterlab
+brew install uv
 
 # Browsers
 brew install --cask firefox
