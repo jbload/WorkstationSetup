@@ -88,6 +88,7 @@ brew install --cask vlc
 brew install gh
 gh auth login
 gh extension install github/gh-copilot
+brew install claude-squad
 brew install ollama
 brew install --cask chatgpt
 brew install --cask claude
