@@ -78,8 +78,8 @@ brew install --cask guitar-pro
 brew install --cask musescore
 
 # Media
-brew install --cask downie
 brew install ffmpeg
+brew install --cask downie
 brew install --cask iina
 brew install --cask permute
 brew install --cask vlc
@@ -89,7 +89,9 @@ brew install gh
 gh auth login
 gh extension install github/gh-copilot
 brew install claude-squad
+ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"
 brew install ollama
+brew install tmux
 brew install --cask chatgpt
 brew install --cask claude
 brew install --cask cursor
