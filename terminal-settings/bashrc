@@ -1,3 +1,6 @@
+# Exit if this is not an interactive terminal
+[[ $- != *i* ]] && return
+
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -10,15 +13,15 @@ export GIT_REPOS=()
 : '
 This could be set explicitly like:
     export GIT_REPOS=(
-        ~/workspace/repo1
-        ~/workspace/repo2
-        ~/workspace/repo3
+        ~/src/repo1
+        ~/src/repo2
+        ~/src/repo3
     )
 
 Or it you can use wildcards like:
-    export GIT_REPOS=(~/workspace/client-*)
+    export GIT_REPOS=(~/src/client-*)
 '
-export WORKSPACE=~/workspace
+export WORKSPACE=~/src
 if [ -f ~/.bashrc-pre-init ]; then
     . ~/.bashrc-pre-init
 fi
@@ -100,29 +103,29 @@ if command -v kubectl version &> /dev/null; then
     alias kctx=kubectx
     . <(kubectl completion bash)
     complete -F __start_kubectl k
-fi	
+fi
 
 if command -v terraform version &> /dev/null; then
     alias tf=terraform
     terraform_path=$(which terraform)
     complete -o nospace -C $terraform_path terraform tf
     unset terraform_path
-fi	
+fi
 
 if [ -f $HOME/.kube/config ]; then
-    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
+    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
 fi
 
 # User configuration
 if command -v subl &> /dev/null; then
     editor_path=$(which subl)
-    alias edit='subl'    
+    alias edit='subl'
 elif command -v code &> /dev/null; then
-    editor_path=$(which code)        
+    editor_path=$(which code)
     alias edit='code'
 elif command -v code-insiders &> /dev/null; then
-    editor_path=$(which code-insiders)        
-    alias edit='code-insiders'    
+    editor_path=$(which code-insiders)
+    alias edit='code-insiders'
 else
     alias edit='vi'
 fi
@@ -134,7 +137,7 @@ else
 fi
 
 if [ -f $editor_path ]; then
-    export EDITOR=$editor_path 
+    export EDITOR=$editor_path
 fi
 
 unset editor_path
@@ -216,7 +219,7 @@ gitsyncall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then            
+        if [ -n "$(git status --porcelain)" ]; then
             dirty_repos+=($repo)
         else
             echo "********************************************************************************"
@@ -229,21 +232,21 @@ gitsyncall () {
 
             git com
             git up
-            
+
             if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
                 git pushf
             fi
 
             git co -
         fi
-        
+
         popd &> /dev/null
     done
 
     if [ ${#dirty_repos[@]} -gt 0 ]; then
         echo "\nThe following repos were skipped because they had pending changes:"
 
-        for dirty_repo in $dirty_repos            
+        for dirty_repo in $dirty_repos
         do
             echo "   $dirty_repo"
         done
@@ -257,10 +260,10 @@ gitstall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then   
+        if [ -n "$(git status --porcelain)" ]; then
             echo "********************************************************************************"
             echo "git status: $repo..."
-            git st                     
+            git st
         else
             clean_repos+=($repo)
         fi
@@ -271,7 +274,7 @@ gitstall () {
     if [ ${#clean_repos[@]} -gt 0 ]; then
         echo "\nThe following repos were skipped because they had no pending changes:"
 
-        for clean_repo in $clean_repos            
+        for clean_repo in $clean_repos
         do
             echo "   $clean_repo"
         done
@@ -325,7 +328,7 @@ gitprune () {
             for branch in $branch_names
             do
                 git branch -D $branch
-            done       
+            done
         else
             echo "\nNo branches were deleted."
         fi
@@ -334,13 +337,10 @@ gitprune () {
     fi
 }
 
-    gitgc
-}
-
 # https://github.com/magicmonty/bash-git-prompt
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
-    GIT_PROMPT_START="\033[01;32m\]\u@\h\[\033[00m\] \w"    
+    GIT_PROMPT_START="\033[01;32m\]\u@\h\[\033[00m\] \w"
     GIT_PROMPT_END="\n$ "
     GIT_PROMPT_THEME_NAME=Solarized
     . $HOME/.bash-git-prompt/gitprompt.sh

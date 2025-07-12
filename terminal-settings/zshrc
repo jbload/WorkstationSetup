@@ -1,3 +1,6 @@
+# Exit if this is not an interactive terminal
+[[ $- != *i* ]] && return
+
 export HISTCONTROL=ignoreboth
 export HISTSIZE=1000
 export HISTFILESIZE=2000
@@ -9,15 +12,15 @@ export GIT_REPOS=()
 : '
 This could be set explicitly like:
     export GIT_REPOS=(
-        ~/workspace/repo1
-        ~/workspace/repo2
-        ~/workspace/repo3
+        ~/src/repo1
+        ~/src/repo2
+        ~/src/repo3
     )
 
 Or it you can use wildcards like:
-    export GIT_REPOS=(~/workspace/client-*)
+    export GIT_REPOS=(~/src/client-*)
 '
-export WORKSPACE=~/workspace
+export WORKSPACE=~/src
 
 if [ -f ~/.zshrc-pre-init ]; then
     . ~/.zshrc-pre-init
@@ -185,10 +188,12 @@ alias .3='cd ../../../'                     # Go back 3 directory levels
 alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
+alias cc='claude'
+alias ccc='claude --continue'
+alias ccr='claude --resume'
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
 alias cic='set completion-ignore-case On'   # cic: Make tab-completion case-insensitive
 alias cl='clear'                            # cl: Clear terminal display
-alias cla='claude'                          # claude code
 alias cls='clear'                           # cls: Clear terminal display
 alias cp='cp -iv'                           # Preferred 'cp' implementation
 alias DT='tee ~/Desktop/terminalOut.txt'    # DT: Pipe content to file on MacOS Desktop

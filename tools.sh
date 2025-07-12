@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 
 #Core
-brew tap git-duet/tap
-brew tap homebrew/cask-fonts
-brew tap homebrew/cask-versions
 brew install ack
 brew install coreutils
 brew install direnv
 brew install fig
 brew install git
-brew install git-duet
 brew install git-lfs
 brew install httpie
 brew install jq
@@ -29,6 +25,7 @@ brew install --cask rectangle
 brew install --cask sublime-text
 brew install --cask visual-studio-code
 brew install --cask warp
+brew install --cask zed
 
 # Java
 brew tap spring-io/tap
@@ -90,6 +87,8 @@ gh auth login
 gh extension install github/gh-copilot
 brew install claude-squad
 ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"
+mkdir $WORKSPACE/.claude-squad
+ln -s $WORKSPACE/.claude-squad ~/.claude-squad
 brew install ollama
 brew install tmux
 brew install --cask chatgpt
@@ -102,6 +101,8 @@ npm install -g @anthropic-ai/claude-code
 # Miscellaneous/Optional
 brew install awscli
 brew install kafka
+brew tap git-duet/tap
+brew install git-duet
 brew install liquibase
 brew install meetingbar
 brew install mysql

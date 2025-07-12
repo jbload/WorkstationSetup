@@ -8,7 +8,7 @@ $useTerraform = $true
 $useHelm = $true
 $goToWorkspaceOnStartup = $false
 $clearScreenOnStartup = $false
-$workspace = "~/workspace"
+$workspace = "~/src"
 $gitPushDuringSync = $false
 $gitRepos = @()
 $debug = $false
@@ -26,7 +26,7 @@ function Write-Debug {
 
     if($debug) {
         Write-Host $message
-    }    
+    }
 }
 
 function Confirm-ModuleInstalled {
@@ -68,11 +68,11 @@ if($useOhMyPosh -and -not $isPackageManagerProfile) {
 if($useGit) {
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    if(Get-Command "git" -ErrorAction SilentlyContinue) { 
+    if(Get-Command "git" -ErrorAction SilentlyContinue) {
         if($ensureModulesInstalled -and -not (Confirm-ModuleInstalled posh-git)) {
             Write-Debug "Installing posh-git"
-            Install-Module posh-git -Scope CurrentUser       
-        } 
+            Install-Module posh-git -Scope CurrentUser
+        }
 
         Write-Debug "Importing posh-git"
         Import-Module posh-git
@@ -85,7 +85,7 @@ if($useGit) {
 if($useMicrok8s) {
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    if(Get-Command "microk8s" -ErrorAction SilentlyContinue) { 
+    if(Get-Command "microk8s" -ErrorAction SilentlyContinue) {
         Write-Debug "Setting microk8s aliases: mks, kubectl"
         Set-Alias mks -Value "microk8s" -Option AllScope
         Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
@@ -98,20 +98,20 @@ if($useMicrok8s) {
 if($useKubectl) {
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    if(Get-Command "kubectl" -ErrorAction SilentlyContinue) { 
+    if(Get-Command "kubectl" -ErrorAction SilentlyContinue) {
         if($ensureModulesInstalled -and -not (Confirm-ModuleInstalled PSKubectlCompletion)) {
             Write-Debug "Installing PSKubectlCompletion"
-            Install-Module PSKubectlCompletion -Scope CurrentUser        
-        } 
+            Install-Module PSKubectlCompletion -Scope CurrentUser
+        }
 
         Write-Debug "Importing PSKubectlCompletion"
-        Import-Module PSKubectlCompletion  
+        Import-Module PSKubectlCompletion
 
         Write-Debug "Setting kubectl alias: k"
         Set-Alias k -Value kubectl -Option AllScope
 
         Write-Debug "Registering KubectlCompletion"
-        Register-KubectlCompletion 
+        Register-KubectlCompletion
     }
 
     $stopwatch.Stop()
@@ -121,7 +121,7 @@ if($useKubectl) {
 if($useTerraform) {
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    if(Get-Command "terraform" -ErrorAction SilentlyContinue) { 
+    if(Get-Command "terraform" -ErrorAction SilentlyContinue) {
         Write-Debug "Setting terraform alias: tf"
         Set-Alias tf -Value terraform -Option AllScope
     }
@@ -230,7 +230,7 @@ function gitsyncall() {
 
             git co -
         }
-        
+
         Pop-Location
     }
 
@@ -249,10 +249,10 @@ function gitstall() {
     foreach($repo in $gitRepos) {
         Push-Location $repo
 
-        if("$(git status --porcelain)".Length -gt 0) {   
+        if("$(git status --porcelain)".Length -gt 0) {
             Write-Host "********************************************************************************"
             Write-Host "git status: $repo..."
-            git st                     
+            git st
         }
         else {
             $cleanRepos += $repo
@@ -319,7 +319,7 @@ function gitprune() {
         if($choice -eq 0) {
             foreach($branchName in $branchNames) {
                 git branch -D $branchName
-            } 
+            }
         }
         else {
             Write-Host "`nNo branches were deleted."
@@ -347,7 +347,7 @@ function Remove-BinFolders() {
         $fullPath = $binFolder.FullName
         Write-Host "Removing folder: $fullPath"
         Remove-Item $binFolder.FullPath -Force -Recurse
-    }    
+    }
 }
 
 if(Test-Path "$HOME\.pwshrc-post-init.ps1") {
