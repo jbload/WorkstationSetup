@@ -284,6 +284,17 @@ brewup () {
     echo Done!
 }
 
+gitall () {
+    echo Synching all git repos...
+    gitsyncall
+
+    echo Pruning all git repos...
+    gitpruneall
+
+    echo GCing all git repos...
+    gitgcall
+}
+
 gitsyncall () {
     local dirty_repos=()
 
@@ -323,6 +334,17 @@ gitsyncall () {
             echo "   $dirty_repo"
         done
     fi
+}
+
+gitbrall () {
+    echo "Current git branches:"
+
+    for repo in $GIT_REPOS
+    do
+        pushd $repo &> /dev/null
+        echo "   - $(git branch --show-current) in $repo"        
+        popd &> /dev/null
+    done
 }
 
 gitstall () {
