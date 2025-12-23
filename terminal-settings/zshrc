@@ -144,18 +144,13 @@ if [ -f $HOME/.kube/config ]; then
     export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
 fi
 
-if type subl > /dev/null; then
-    editor_path=$(which subl)
-    alias edit='subl'    
-elif type code > /dev/null; then
-    editor_path=$(which code)        
-    alias edit='code'
-elif type code-insiders > /dev/null; then
-    editor_path=$(which code-insiders)        
-    alias edit='code-insiders'    
-else
-    alias edit='vi'
-fi
+for editor in subl zed code code-insiders cursor vi; do
+    if type "$editor" > /dev/null 2>&1; then
+        editor_path=$(which "$editor")
+        alias edit="$editor"
+        break
+    fi
+done
 
 if type vim > /dev/null; then
     export KUBE_EDITOR=vim

@@ -19,6 +19,7 @@ brew install --cask font-cascadia-code
 brew install --cask font-cascadia-code-pl
 brew install --cask font-cascadia-mono
 brew install --cask font-cascadia-mono-pl
+brew install --cask google-earth-pro
 brew install --cask iterm2
 brew install --cask postman
 brew install --cask rectangle
