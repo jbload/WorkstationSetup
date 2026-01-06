@@ -26,7 +26,6 @@ if [ -f ~/.zshrc-pre-init ]; then
     . ~/.zshrc-pre-init
 fi
 
-setopt APPEND_HISTORY
 autoload -U +X bashcompinit && bashcompinit
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -162,6 +161,8 @@ if [ -f $editor_path ]; then
     export EDITOR=$editor_path 
 fi
 
+setopt APPEND_HISTORY
+unsetopt PUSHD_IGNORE_DUPS
 unset editor_path
 
 export BLOCKSIZE=1k
