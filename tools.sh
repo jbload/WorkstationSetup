@@ -92,6 +92,7 @@ ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"
 mkdir $WORKSPACE/.claude-squad
 ln -s $WORKSPACE/.claude-squad ~/.claude-squad
 brew install ollama
+brew install opencode
 brew install tmux
 brew install --cask chatgpt
 brew install --cask claude
