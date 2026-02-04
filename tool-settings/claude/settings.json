@@ -1,0 +1,58 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(GH_HOST=github.com gh pr diff:*)",
+      "Bash(GH_HOST=github.com gh pr list:*)",
+      "Bash(GH_HOST=github.com gh pr view:*)",
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git merge-base:*)",
+      "Bash(git merge:*)",
+      "Bash(git mv:*)",
+      "Bash(git pull:*)",
+      "Bash(git rebase:*)",
+      "Bash(git restore:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git rm:*)",
+      "Bash(git stash:*)",
+      "Glob",
+      "Grep",
+      "LS",
+      "NotebookRead",
+      "Read",
+      "TodoRead",
+      "TodoWrite",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Read(*.pem)"
+    ],
+    "ask": [],
+    "defaultMode": "plan"
+  },
+  "model": "sonnet",
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y @owloops/claude-powerline@latest"
+  }
+}
