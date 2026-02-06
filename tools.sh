@@ -96,10 +96,10 @@ brew install opencode
 brew install tmux
 brew install --cask chatgpt
 brew install --cask claude
+brew install --cask claude-code
 brew install --cask cursor
 brew install --cask github-copilot-for-xcode
 brew install --cask lm-studio
-npm install -g @anthropic-ai/claude-code
 
 # Miscellaneous/Optional
 brew install awscli
@@ -115,7 +115,6 @@ brew install redis
 brew install sentry-cli
 brew install swagger-codegen
 brew install terraform
-brew install --cask boop
 brew install --cask calibre
 brew install --cask discord
 brew install --cask docker
