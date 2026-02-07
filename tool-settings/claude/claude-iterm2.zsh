@@ -176,7 +176,7 @@ _claude_find_bin() {
   elif [[ -x /usr/local/bin/claude ]]; then
     echo "/usr/local/bin/claude"
   else
-    command -v claude 2>/dev/null || echo "claude"
+    whence -p claude 2>/dev/null || echo "claude"
   fi
 }
 
@@ -194,7 +194,7 @@ function claude {
   if [[ -n $_claude_orig_alias ]]; then
     eval "$_claude_orig_alias ${(q)@}"
   else
-    "$(_claude_find_bin)" "$@"
+    command "$(_claude_find_bin)" "$@"
   fi
 
   # Reset on exit
