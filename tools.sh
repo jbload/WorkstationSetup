@@ -4,26 +4,26 @@ typeset -A INSTALLERS
 INSTALLERS=(
   # Core installations
   essentials                  install_essentials
-  
+
   # Editors
   editors_sublime             install_editors_sublime
   editors_vscode              install_editors_vscode
   editors_zed                 install_editors_zed
   editors_all                 install_editors_all
-  
+
   # Terminals
   terminals_ghostty           install_terminals_ghostty
   terminals_iterm2            install_terminals_iterm2
   terminals_warp              install_terminals_warp
   terminals_all               install_terminals_all
-  
+
   # JetBrains
   jetbrains                   install_jetbrains
-  
+
   # Git tools
   git_gui_apps                install_git_gui_apps
   pair_programming            install_pair_programming_tools
-  
+
   # Development stacks
   python_stack                install_dev_stack_python
   node_stack                  install_dev_stack_node
@@ -33,40 +33,41 @@ INSTALLERS=(
   spring_boot_stack           install_dev_stack_spring_boot
   dotnet_stack                install_dev_stack_dotnet
   ios_stack                   install_dev_stack_ios
-  
+
   # Containers & Kubernetes
   docker                      install_docker
   kubernetes_cli              install_kubernetes_cli
   microk8s                    install_microk8s
-  
+
   # Cloud
   cloud_aws_cli               install_cloud_aws_cli
-  
+
   # Databases & messaging
   kafka                       install_kafka
   mysql                       install_mysql
   mysql_client                install_mysql_client
   rabbitmq                    install_rabbitmq
   redis                       install_redis
-  
+
   # AI Development tools
   ai_dev_github_copilot       install_ai_dev_github_copilot
   ai_dev_claude_code          install_ai_dev_claude_code
+  ai_dev_codex                install_ai_dev_codex
   ai_dev_opencode             install_ai_dev_opencode
   ai_dev_cursor               install_ai_dev_cursor
   ai_dev_all                  install_ai_dev_all
-  
+
   # AI tools
   ai_ollama                   install_ai_ollama
   ai_lmstudio                 install_ai_lmstudio
   ai_chatbots                 install_ai_chatbots
-  
+
   # Browsers
   browsers_firefox            install_browsers_firefox
   browsers_chrome             install_browsers_chrome
   browsers_edge               install_browsers_edge
   browsers_all                install_browsers_all
-  
+
   # Machine presets
   @home_setup                 install_home_machine
   @home_setup_optionals       install_home_machine_optionals
@@ -88,13 +89,13 @@ install_essentials() {
   brew install direnv
   brew install fig
   brew install git
-  brew install git-lfs  
+  brew install git-lfs
   brew install httpie
   brew install jq
   brew install ripgrep
   brew install swagger-codegen
   brew install vim
-  brew install yq  
+  brew install yq
 }
 
 install_editors_sublime() {
@@ -133,7 +134,7 @@ install_terminals_all() {
   install_terminals_warp
 }
 
-install_jetbrains() {  
+install_jetbrains() {
   brew install --cask jetbrains-toolbox
 }
 
@@ -164,7 +165,7 @@ install_dev_stack_angular() {
 }
 
 install_dev_stack_react() {
-  install_dev_stack_node  
+  install_dev_stack_node
   corepack enable
 }
 
@@ -173,7 +174,7 @@ install_dev_stack_java() {
   brew install gradle
   brew install liquibase
   brew install maven
-  brew install prettier  
+  brew install prettier
   npm install gradle-upgrade-interactive -g
 }
 
@@ -189,7 +190,7 @@ install_dev_stack_dotnet() {
 
 install_dev_stack_ios() {
   brew install carthage
-  brew install fastlane  
+  brew install fastlane
   brew install --cask sf-symbols
 }
 
@@ -249,6 +250,11 @@ install_ai_dev_claude_code() {
   ln -s $WORKSPACE/.claude-squad ~/.claude-squad
 }
 
+install_ai_dev_codex() {
+    brew install codex
+    brew install --cask codex-app
+}
+
 install_ai_dev_opencode() {
   brew install opencode
 }
@@ -259,6 +265,7 @@ install_ai_dev_cursor() {
 
 install_ai_dev_all() {
   install_ai_dev_claude_code
+  install_ai_dev_codex
   install_ai_dev_cursor
   install_ai_dev_github_copilot
   install_ai_dev_opencode
@@ -268,7 +275,7 @@ install_ai_ollama() {
   brew install ollama
 }
 
-install_ai_lmstudio() {  
+install_ai_lmstudio() {
   brew install --cask lm-studio
 }
 
@@ -320,11 +327,11 @@ install_home_machine() {
   brew install --cask microsoft-remote-desktop
   brew install --cask musescore
   brew install --cask permute
-  brew install sentry-cli  
+  brew install sentry-cli
 }
 
 install_home_machine_optionals() {
-  brew install --cask calibre  
+  brew install --cask calibre
   brew install --cask discord
   brew install --cask drawio
   brew install --cask google-earth-pro
@@ -332,7 +339,7 @@ install_home_machine_optionals() {
   brew install --cask orbstack
   brew install --cask slack
   brew install --cask zoom
-  brew install ffmpeg  
+  brew install ffmpeg
   brew install terraform
 }
 
@@ -347,7 +354,7 @@ install_work_machine() {
   install_terminals_ghostty
   install_terminals_iterm2
 
-  brew install meetingbar  
+  brew install meetingbar
 }
 
 # fzf setup

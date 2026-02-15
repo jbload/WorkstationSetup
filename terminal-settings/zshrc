@@ -127,7 +127,7 @@ if type ng > /dev/null; then
 fi
 
 if type kubectl > /dev/null; then
-    alias k=kubectl 
+    alias k=kubectl
     alias kctx=kubectx
     source <(kubectl completion zsh)
 fi
@@ -140,7 +140,7 @@ if type terraform > /dev/null; then
 fi
 
 if [ -f $HOME/.kube/config ]; then
-    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config 
+    export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
 fi
 
 for editor in subl zed code code-insiders cursor vi; do
@@ -158,7 +158,7 @@ else
 fi
 
 if [ -f $editor_path ]; then
-    export EDITOR=$editor_path 
+    export EDITOR=$editor_path
 fi
 
 setopt APPEND_HISTORY
@@ -192,11 +192,12 @@ alias cic='set completion-ignore-case On'   # cic: Make tab-completion case-inse
 alias cl='clear'                            # cl: Clear terminal display
 alias cls='clear'                           # cls: Clear terminal display
 alias cp='cp -iv'                           # Preferred 'cp' implementation
+alias cx='codex'
 alias DT='tee ~/Desktop/terminalOut.txt'    # DT: Pipe content to file on MacOS Desktop
 alias editbashrc='edit ~/.bashrc'
 alias editgitconfig='edit ~/.gitconfig'
 alias editzshrc='edit ~/.zshrc'
-alias epoch='gdate +%s%3N'                  # Milliseconds since epoch. Requires: brew install coreutils 
+alias epoch='gdate +%s%3N'                  # Milliseconds since epoch. Requires: brew install coreutils
 alias f='open -a Finder ./'                 # f: Opens current directory in MacOS Finder
 alias fix_stty='stty sane'                  # fix_stty: Restore terminal settings when screwed up
 alias fl='bundle exec fastlane'
@@ -299,7 +300,7 @@ gitsyncall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then            
+        if [ -n "$(git status --porcelain)" ]; then
             dirty_repos+=($repo)
         else
             echo "********************************************************************************"
@@ -312,21 +313,21 @@ gitsyncall () {
 
             git com
             git up
-            
+
             if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
                 git pushf
             fi
 
             git co -
         fi
-        
+
         popd &> /dev/null
     done
 
     if [ ${#dirty_repos[@]} -gt 0 ]; then
         echo "\nThe following repos were skipped because they had pending changes:"
 
-        for dirty_repo in $dirty_repos            
+        for dirty_repo in $dirty_repos
         do
             echo "   $dirty_repo"
         done
@@ -339,7 +340,7 @@ gitbrall () {
     for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
-        echo "   - $(git branch --show-current) in $repo"        
+        echo "   - $(git branch --show-current) in $repo"
         popd &> /dev/null
     done
 }
@@ -351,10 +352,10 @@ gitstall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then   
+        if [ -n "$(git status --porcelain)" ]; then
             echo "********************************************************************************"
             echo "git status: $repo..."
-            git st                     
+            git st
         else
             clean_repos+=($repo)
         fi
@@ -365,7 +366,7 @@ gitstall () {
     if [ ${#clean_repos[@]} -gt 0 ]; then
         echo "\nThe following repos were skipped because they had no pending changes:"
 
-        for clean_repo in $clean_repos            
+        for clean_repo in $clean_repos
         do
             echo "   $clean_repo"
         done
@@ -419,7 +420,7 @@ gitprune () {
             for branch in $branch_names
             do
                 git branch -D $branch
-            done       
+            done
         else
             echo "\nNo branches were deleted."
         fi
@@ -434,7 +435,7 @@ rmdss() {
 
     if read -q "choice?Are you sure you want to remove these folders? (y/n): "; then
         sudo find . -name .DS_Store -delete
-        killall Finder    
+        killall Finder
     else
         echo "No folders were deleted."
     fi
