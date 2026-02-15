@@ -29,6 +29,7 @@
       "Bash(git rev-parse:*)",
       "Bash(git rm:*)",
       "Bash(git stash:*)",
+      "Bash(xcodebuild:*)",
       "Glob",
       "Grep",
       "LS",
@@ -46,13 +47,49 @@
     "defaultMode": "plan"
   },
   "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y @owloops/claude-powerline@latest"
+  },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y @owloops/claude-powerline@latest"
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your permission to continue\" with title \"⚠️ Claude Code\" sound name \"Hero\"'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude is waiting for your input\" with title \"⏸️ Claude Code\" sound name \"Blow\"'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Task completed\" with title \"✅ Claude Code\" sound name \"Glass\"'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }
