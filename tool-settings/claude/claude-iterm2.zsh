@@ -201,3 +201,6 @@ function claude {
   _claude_iterm2_reset_tab_colors
   [[ -n "$CLAUDE_ITERM_PROFILE" ]] && _claude_iterm2_set_profile "${CLAUDE_ITERM_ORIGINAL_PROFILE:-Default}"
 }
+function claude_with_iterm2_color_tabs {
+  claude
+}
