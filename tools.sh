@@ -248,11 +248,13 @@ install_ai_dev_claude_code() {
   ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"
   mkdir $WORKSPACE/.claude-squad
   ln -s $WORKSPACE/.claude-squad ~/.claude-squad
+  #claude mcp add --transport stdio xcode -- xcrun mcpbridge
 }
 
 install_ai_dev_codex() {
     brew install codex
     brew install --cask codex-app
+    #codex mcp add xcode -- xcrun mcpbridge
 }
 
 install_ai_dev_opencode() {

@@ -15,6 +15,7 @@ $debug = $false
 
 $env:GIT_DUET_ROTATE_AUTHOR = 1
 $env:GIT_DUET_ALLOW_MULTIPLE_COMMITTERS = 1
+$env:CLAUDE_CODE_NO_FLICKER = 1
 
 $diagnostics = @()
 $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes","Description."
