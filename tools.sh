@@ -12,6 +12,7 @@ INSTALLERS=(
   editors_all                 install_editors_all
 
   # Terminals
+  terminals_cmux              install_terminals_cmux
   terminals_ghostty           install_terminals_ghostty
   terminals_iterm2            install_terminals_iterm2
   terminals_warp              install_terminals_warp
@@ -116,6 +117,11 @@ install_editors_all() {
   install_editors_zed
 }
 
+install_terminals_cmux() {
+  brew install --cask cmux
+  sudo ln -sf "/Applications/cmux.app/Contents/Resources/bin/cmux" /usr/local/bin/cmux
+}
+
 install_terminals_ghostty() {
   brew install --cask ghostty
 }
@@ -129,6 +135,7 @@ install_terminals_warp() {
 }
 
 install_terminals_all() {
+  install_terminals_cmux
   install_terminals_ghostty
   install_terminals_iterm2
   install_terminals_warp
@@ -353,6 +360,7 @@ install_work_machine() {
   install_editors_vscode
   install_essentials
   install_jetbrains
+  install_terminals_cmux
   install_terminals_ghostty
   install_terminals_iterm2
 
