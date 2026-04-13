@@ -54,6 +54,7 @@ INSTALLERS=(
   ai_dev_github_copilot       install_ai_dev_github_copilot
   ai_dev_claude_code          install_ai_dev_claude_code
   ai_dev_codex                install_ai_dev_codex
+  ai_dev_conductor            install_ai_dev_conductor
   ai_dev_opencode             install_ai_dev_opencode
   ai_dev_cursor               install_ai_dev_cursor
   ai_dev_all                  install_ai_dev_all
@@ -264,6 +265,10 @@ install_ai_dev_codex() {
     #codex mcp add xcode -- xcrun mcpbridge
 }
 
+install_ai_dev_conductor() {
+    brew install --cask conductor
+}
+
 install_ai_dev_opencode() {
   brew install opencode
 }
@@ -275,6 +280,7 @@ install_ai_dev_cursor() {
 install_ai_dev_all() {
   install_ai_dev_claude_code
   install_ai_dev_codex
+  install_ai_dev_conductor
   install_ai_dev_cursor
   install_ai_dev_github_copilot
   install_ai_dev_opencode
