@@ -477,6 +477,11 @@ gitprune () {
     fi
 }
 
+gitcowt () {
+    local output
+    output=$(git cowt "$1") && echo "$output" && cd "$(echo "$output" | grep -oE '/.*')"
+}
+
 rmdss() {
     sudo find . -name .DS_Store
     echo "\n"

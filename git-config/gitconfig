@@ -20,6 +20,7 @@
 	com = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
 	conflicts = !git diff --name-only --diff-filter=U
 	contrib = shortlog -e --summary --numbered
+	cowt = "!f() { WTDIR=${WORKSPACE:-$HOME}/.worktrees/$(basename $(git rev-parse --show-toplevel))/$1; git worktree add -b $USER/$1 \"$WTDIR\"; }; f"
 	cp = cherry-pick
 	dci = duet-commit
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
