@@ -267,6 +267,51 @@ ii () {
     echo
 }
 
+linknodestable () {
+    if ! brew list --formula | grep -q '^node$'; then
+        return
+    fi
+
+    local node_version
+    node_version=$(brew list --versions node 2>/dev/null | awk '{print $2}')
+    local node_major="${node_version%%.*}"
+
+    if ! [[ "$node_major" =~ ^[0-9]+$ ]]; then
+        return
+    fi
+
+    local node_at_majors
+    node_at_majors=$(brew list --formula | awk '/^node@[0-9]+$/ { sub(/^node@/, "", $0); print $0 }')
+
+    local latest_node_at_major=""
+    if [ -n "$node_at_majors" ]; then
+        latest_node_at_major=$(echo "$node_at_majors" | sort -n | tail -1)
+    fi
+
+    if [ -n "$latest_node_at_major" ] && [ "$node_major" -gt $((latest_node_at_major + 2)) ]; then
+        echo "Warning: latest stable node@VV appears stale (node=${node_major}, latest node@VV=${latest_node_at_major})."
+    fi
+
+    local target_formula=""
+    if [ $((node_major % 2)) -eq 0 ]; then
+        target_formula="node"
+    else
+        local latest_even_node_at_major=""
+        if [ -n "$node_at_majors" ]; then
+            latest_even_node_at_major=$(echo "$node_at_majors" | awk '$1 % 2 == 0' | sort -n | tail -1)
+        fi
+
+        if [ -n "$latest_even_node_at_major" ]; then
+            target_formula="node@${latest_even_node_at_major}"
+        else
+            return
+        fi
+    fi
+
+    echo Linking Homebrew Node formula: ${target_formula}...
+    brew link --overwrite --force "$target_formula"
+}
+
 brewup () {
     echo Updating Homebrew...
     brew update
@@ -276,6 +321,8 @@ brewup () {
 
     echo Updating Homebrew Casks...
     brew upgrade --cask
+
+    linknodestable
 
     echo Cleaning Up Homebrew...
     brew cleanup
