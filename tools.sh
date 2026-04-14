@@ -41,6 +41,7 @@ INSTALLERS=(
   microk8s                    install_microk8s
 
   # Cloud
+  cloud_azure_cli             install_cloud_azure_cli
   cloud_aws_cli               install_cloud_aws_cli
 
   # Databases & messaging
@@ -53,7 +54,9 @@ INSTALLERS=(
   # AI Development tools
   ai_dev_github_copilot       install_ai_dev_github_copilot
   ai_dev_claude_code          install_ai_dev_claude_code
+  ai_dev_claude_code_mcp      install_ai_dev_claude_code_mcp
   ai_dev_codex                install_ai_dev_codex
+  ai_dev_codex_mcp            install_ai_dev_codex_mcp
   ai_dev_conductor            install_ai_dev_conductor
   ai_dev_opencode             install_ai_dev_opencode
   ai_dev_cursor               install_ai_dev_cursor
@@ -96,6 +99,7 @@ install_essentials() {
   brew install jq
   brew install ripgrep
   brew install swagger-codegen
+  brew install tmux
   brew install vim
   brew install yq
 }
@@ -221,6 +225,10 @@ install_cloud_aws_cli() {
   brew install awscli
 }
 
+install_cloud_azure_cli() {
+  brew install azure-cli
+}
+
 install_kafka() {
   brew install kafka
 }
@@ -251,18 +259,19 @@ install_ai_dev_github_copilot() {
 
 install_ai_dev_claude_code() {
   brew install --cask claude-code
-  brew install tmux
-  brew install claude-squad
-  ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"
-  mkdir $WORKSPACE/.claude-squad
-  ln -s $WORKSPACE/.claude-squad ~/.claude-squad
-  #claude mcp add --transport stdio xcode -- xcrun mcpbridge
+}
+
+install_ai_dev_claude_code_mcp() {
+  claude mcp add --transport stdio xcode -- xcrun mcpbridge
 }
 
 install_ai_dev_codex() {
     brew install codex
     brew install --cask codex-app
-    #codex mcp add xcode -- xcrun mcpbridge
+}
+
+install_ai_dev_codex_mcp() {
+    codex mcp add xcode -- xcrun mcpbridge
 }
 
 install_ai_dev_conductor() {
