@@ -385,9 +385,32 @@ gitgcall () {
 }
 
 gitprune () {
+    local worktree_paths=()
+
+    git worktree list | tail -n +2 | awk '{print $1}' | while read -r wt_path
+    do
+        worktree_paths+=($wt_path)
+    done
+
+    if [ ${#worktree_paths[@]} -gt 0 ]; then
+        echo "\nWorktrees:"
+        printf '   %s\n' "${worktree_paths[@]}"
+        echo ""
+
+        if read -q "choice?Remove these worktrees? (y/n): "; then
+            echo ""
+            for wt in $worktree_paths
+            do
+                git worktree remove "$wt"
+            done
+        else
+            echo "\nNo worktrees were removed."
+        fi
+    fi
+
     local branch_names=()
 
-    git branch | grep -v '^*\|master\|main' | while read -r branch
+    git branch | grep -v '^[*+]\|master\|main' | while read -r branch
     do
         branch_names+=($branch)
     done
@@ -397,7 +420,7 @@ gitprune () {
         printf '%s\n   ' "${branch_names[@]}"
         echo ""
 
-        if read -q "choice?Are you sure you want to remove these branches? (y/n): "; then
+        if read -q "choice?Remove these branches? (y/n): "; then
             for branch in $branch_names
             do
                 git branch -D $branch
