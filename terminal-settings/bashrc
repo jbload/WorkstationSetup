@@ -6,7 +6,7 @@ export HISTSIZE=1000
 export HISTFILESIZE=2000
 export GIT_DUET_ROTATE_AUTHOR=1
 export GIT_DUET_ALLOW_MULTIPLE_COMMITTERS=1
-
+export CLAUDE_CODE_NO_FLICKER=1
 
 export GIT_PUSH_DURING_SYNC=0
 export GIT_REPOS=()
@@ -18,13 +18,23 @@ This could be set explicitly like:
         ~/src/repo3
     )
 
-Or it you can use wildcards like:
+Or you can use wildcards like:
     export GIT_REPOS=(~/src/client-*)
 '
 export WORKSPACE=~/src
 if [ -f ~/.bashrc-pre-init ]; then
     . ~/.bashrc-pre-init
 fi
+
+filtered_repos=()
+for repo in "${GIT_REPOS[@]}"
+do
+    if [ -d "$repo/.git" ]; then
+        filtered_repos+=("$repo")
+    fi
+done
+GIT_REPOS=("${filtered_repos[@]}")
+unset filtered_repos
 
 shopt -s histappend
 shopt -s checkwinsize
@@ -157,21 +167,31 @@ alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
 alias bashrc='. ~/.bashrc'
+alias cc='claude'
+alias ccc='claude --continue'
+alias ccr='claude --resume'
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
 alias cic='set completion-ignore-case On'   # cic:          Make tab-completion case-insensitive
 alias cl='clear'                            # cl:           Clear terminal display
 alias cls='clear'                           # cls:          Clear terminal display
 alias cp='cp -iv'                           # Preferred 'cp' implementation
+alias cx='codex'
 alias DT='tee ~/Desktop/terminalOut.txt'    # DT:           Pipe content to file on MacOS Desktop
 alias editbashrc='edit ~/.bashrc'
 alias editgitconfig='edit ~/.gitconfig'
 alias editzshrc='edit ~/.zshrc'
+alias epoch='gdate +%s%3N'                  # Milliseconds since epoch. Requires: brew install coreutils
 alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
 alias fix_stty='stty sane'                  # fix_stty:     Restore terminal settings when screwed up
+alias fl='bundle exec fastlane'
+alias flb='bundle exec fastlane beta'
 alias flushDNS='dscacheutil -flushcache'            # flushDNS:     Flush out the DNS Cache
+alias ghce='gh copilot explain'
+alias ghcs='gh copilot suggest'
 alias gui=gradle-upgrade-interactive
 alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on connections for en0
 alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
+alias jup='jupyter lab'
 alias less='less -FSRXc'                    # Preferred 'less' implementation
 alias ll='ls -FGlAhp'                       # Preferred 'ls' implementation
 alias lsock='sudo /usr/sbin/lsof -i -P'             # lsock:        Display open sockets
@@ -182,6 +202,8 @@ alias macv='mvn clean verify'
 alias madana='mvn dependency:analyze'
 alias madtree='mvn dependency:tree'
 alias maout='mvn versions:display-property-updates && ./mvnw versions:display-dependency-updates && ./mvnw versions:display-plugin-updates'
+alias mapc='mvn prettier:check'
+alias mapw='mvn prettier:write'
 alias mat='mvn test'
 alias maup='mvn versions:use-latest-versions'
 alias mav='mvn verify'
@@ -190,14 +212,20 @@ alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias myip='curl https://dynamicdns.park-your-domain.com/getip'                    # myip:         Public facing IP Address
 alias netCons='lsof -i'                             # netCons:      Show all open TCP/IP sockets
+alias npmup='npm update -g'
 alias oc='opencode'
 alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listening connections
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
 alias prprep='mvn -U clean verify'
 alias show_options='shopt'                  # Show_options: display bash options settings
 alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
+alias swf='swift format --parallel --recursive --in-place'
+alias swfa='swift format --parallel --recursive --in-place .'
+alias swl='swift format lint --parallel --recursive --in-place'
+alias swla='swift format lint --parallel --recursive --in-place .'
 alias ws='cd $WORKSPACE'
 alias xcdd='rm -rf ~/Library/Developer/Xcode/DerivedData'
+alias xcsr='xcrun simctl erase all'         # Simulator Reset
 alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
 alias ~="cd ~"                              # ~:            Go Home
@@ -208,15 +236,203 @@ ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in Ma
 trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
 zipf () { zip -r "$1".zip "$1" ; }          # zipf:         To create a ZIP archive of a folder
 
+ii () {
+    echo -e "\nYou are logged on ${RED}$HOST"
+    echo -e "\nAdditionnal information:$NC " ; uname -a
+    echo -e "\n${RED}Users logged on:$NC " ; w -h
+    echo -e "\n${RED}Current date :$NC " ; date
+    echo -e "\n${RED}Machine stats :$NC " ; uptime
+    echo -e "\n${RED}Current network location :$NC " ; scselect
+    echo -e "\n${RED}Public facing IP Address :$NC " ;myip
+    #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
+    echo
+}
+
+linknodestable () {
+    if ! brew list --formula | grep -q '^node$'; then
+        return
+    fi
+
+    local node_version
+    node_version=$(brew list --versions node 2>/dev/null | awk '{print $2}')
+    local node_major="${node_version%%.*}"
+
+    if ! [[ "$node_major" =~ ^[0-9]+$ ]]; then
+        return
+    fi
+
+    local node_at_majors
+    node_at_majors=$(brew list --formula | awk '/^node@[0-9]+$/ { sub(/^node@/, "", $0); print $0 }')
+
+    local latest_node_at_major=""
+    if [ -n "$node_at_majors" ]; then
+        latest_node_at_major=$(echo "$node_at_majors" | sort -n | tail -1)
+    fi
+
+    if [ -n "$latest_node_at_major" ] && [ "$node_major" -gt $((latest_node_at_major + 2)) ]; then
+        echo "Warning: latest stable node@VV appears stale (node=${node_major}, latest node@VV=${latest_node_at_major})."
+    fi
+
+    local target_formula=""
+    if [ $((node_major % 2)) -eq 0 ]; then
+        target_formula="node"
+    else
+        local latest_even_node_at_major=""
+        if [ -n "$node_at_majors" ]; then
+            latest_even_node_at_major=$(echo "$node_at_majors" | awk '$1 % 2 == 0' | sort -n | tail -1)
+        fi
+
+        if [ -n "$latest_even_node_at_major" ]; then
+            target_formula="node@${latest_even_node_at_major}"
+        else
+            return
+        fi
+    fi
+
+    echo Linking Homebrew Node formula: ${target_formula}...
+    brew link --overwrite --force "$target_formula"
+}
+
+brewup () {
+    echo Updating Homebrew...
+    brew update
+
+    echo Updating Homebrew Formulae...
+    brew upgrade --formula
+
+    echo Updating Homebrew Casks...
+    brew upgrade --cask
+
+    linknodestable
+
+    echo Cleaning Up Homebrew...
+    brew cleanup
+
+    echo Done!
+}
+
+gitall () {
+    echo Synching all git repos...
+    gitsyncall
+
+    echo Pruning all git repos...
+    gitpruneall
+
+    echo GCing all git repos...
+    gitgcall
+}
+
+gitbrall () {
+    echo "Current git branches:"
+
+    for repo in "${GIT_REPOS[@]}"
+    do
+        pushd "$repo" &> /dev/null
+        echo "   - $(git branch --show-current) in $repo"
+        popd &> /dev/null
+    done
+}
+
+gitcowt () {
+    local output
+    output=$(git cowt "$1") && echo "$output" && cd "$(echo "$output" | grep -oE '/.*')"
+}
+
+gitgc () {
+    git maintenance run --task gc
+}
+
+gitgcall () {
+    for repo in "${GIT_REPOS[@]}"
+    do
+        pushd "$repo" &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Performing maintenance on git repo: $repo..."
+        gitgc
+
+        popd &> /dev/null
+    done
+}
+
+gitprune () {
+    local branch_names=()
+
+    while read -r branch
+    do
+        branch_names+=("$branch")
+    done < <(git branch | grep -v '^*\|master\|main')
+
+    if [ ${#branch_names[@]} -gt 0 ]; then
+        echo -e "\nLocal branches:"
+        printf '   %s\n' "${branch_names[@]}"
+        echo ""
+
+        read -p "Are you sure you want to remove these branches? (y/n): " -n 1 -r choice
+        echo
+        if [[ $choice =~ ^[Yy]$ ]]; then
+            for branch in "${branch_names[@]}"
+            do
+                git branch -D "$branch"
+            done
+        else
+            echo "No branches were deleted."
+        fi
+    else
+        echo "There are no local branches to delete."
+    fi
+}
+
+gitpruneall () {
+    for repo in "${GIT_REPOS[@]}"
+    do
+        pushd "$repo" &> /dev/null
+
+        echo "********************************************************************************"
+        echo "Looking for local branches to delete from git repo: $repo..."
+        gitprune
+
+        popd &> /dev/null
+    done
+}
+
+gitstall () {
+    local clean_repos=()
+
+    for repo in "${GIT_REPOS[@]}"
+    do
+        pushd "$repo" &> /dev/null
+
+        if [ -n "$(git status --porcelain)" ]; then
+            echo "********************************************************************************"
+            echo "git status: $repo..."
+            git st
+        else
+            clean_repos+=("$repo")
+        fi
+
+        popd &> /dev/null
+    done
+
+    if [ ${#clean_repos[@]} -gt 0 ]; then
+        echo -e "\nThe following repos were skipped because they had no pending changes:"
+
+        for clean_repo in "${clean_repos[@]}"
+        do
+            echo "   $clean_repo"
+        done
+    fi
+}
+
 gitsyncall () {
     local dirty_repos=()
 
-    for repo in $GIT_REPOS
+    for repo in "${GIT_REPOS[@]}"
     do
-        pushd $repo &> /dev/null
+        pushd "$repo" &> /dev/null
 
         if [ -n "$(git status --porcelain)" ]; then
-            dirty_repos+=($repo)
+            dirty_repos+=("$repo")
         else
             echo "********************************************************************************"
             echo "Synching git repo: $repo..."
@@ -240,97 +456,42 @@ gitsyncall () {
     done
 
     if [ ${#dirty_repos[@]} -gt 0 ]; then
-        echo "\nThe following repos were skipped because they had pending changes:"
+        echo -e "\nThe following repos were skipped because they had pending changes:"
 
-        for dirty_repo in $dirty_repos
+        for dirty_repo in "${dirty_repos[@]}"
         do
             echo "   $dirty_repo"
         done
     fi
 }
 
-gitstall () {
-    local clean_repos=()
+rmdss() {
+    sudo find . -name .DS_Store
+    echo
 
-    for repo in $GIT_REPOS
-    do
-        pushd $repo &> /dev/null
-
-        if [ -n "$(git status --porcelain)" ]; then
-            echo "********************************************************************************"
-            echo "git status: $repo..."
-            git st
-        else
-            clean_repos+=($repo)
-        fi
-
-        popd &> /dev/null
-    done
-
-    if [ ${#clean_repos[@]} -gt 0 ]; then
-        echo "\nThe following repos were skipped because they had no pending changes:"
-
-        for clean_repo in $clean_repos
-        do
-            echo "   $clean_repo"
-        done
-    fi
-}
-
-gitgcall () {
-    for repo in $GIT_REPOS
-    do
-        pushd $repo &> /dev/null
-
-        echo "********************************************************************************"
-        echo "Performing maintenance on git repo: $repo..."
-        gitgc
-
-        popd &> /dev/null
-    done
-}
-
-gitgc () {
-    git maintenance run --task gc
-}
-
-gitpruneall () {
-    for repo in $GIT_REPOS
-    do
-        pushd $repo &> /dev/null
-
-        echo "********************************************************************************"
-        echo "Looking for local branches to delete from git repo: $repo..."
-        gitprune
-
-        popd &> /dev/null
-    done
-}
-
-gitprune () {
-    local branch_names=()
-
-    git branch | grep -v '^*\|master\|main' | while read -r branch
-    do
-        branch_names+=($branch)
-    done
-
-    if [ ${#branch_names[@]} -gt 0 ]; then
-        echo "\nLocal branches:"
-        printf '%s\n   ' "${branch_names[@]}"
-        echo ""
-
-        if read -q "choice?Are you sure you want to remove these branches? (y/n): "; then
-            for branch in $branch_names
-            do
-                git branch -D $branch
-            done
-        else
-            echo "\nNo branches were deleted."
-        fi
+    read -p "Are you sure you want to remove these folders? (y/n): " -n 1 -r choice
+    echo
+    if [[ $choice =~ ^[Yy]$ ]]; then
+        sudo find . -name .DS_Store -delete
+        killall Finder
     else
-        echo "There are no local branches to delete."
+        echo "No folders were deleted."
     fi
+}
+
+remind() {
+    echo "git:"
+    echo "- Delete remote branch: git push origin --delete branch_name"
+    echo "- Stop tracking a file: git update-index --assume-unchanged [<file>...]"
+    echo "- Fix 'refs/remotes/origin/HEAD is not a symbolic ref' error when using git com alias: git remote set-head origin master"
+    echo
+    echo 'Docker:'
+    echo "- Remove all Docker images: docker rmi \$(docker images -q) --force"
+    echo
+    echo "MacOS:"
+    echo "- Capture screenshot of entire screen: Command + Shift + 3"
+    echo "- Capture screenshot of selectable portion of screen: Command + Shift + 4"
+    echo "- Capture screenshot with options: Command + Shift + 5"
 }
 
 # https://github.com/magicmonty/bash-git-prompt
@@ -342,7 +503,7 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     . $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
-if [[ -v $GO_TO_WORKSPACE_ON_STARTUP ]]; then
+if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]]; then
     builtin cd $WORKSPACE
 fi
 
@@ -362,7 +523,7 @@ if command -v direnv &> /dev/null; then
     eval "$(direnv hook bash)"
 fi
 
-if [[ -v $CLEAR_SCREEN_ON_STARTUP ]]; then
+if [[ -v CLEAR_SCREEN_ON_STARTUP ]]; then
     clear
 fi
 
