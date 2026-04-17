@@ -65,7 +65,10 @@ INSTALLERS=(
   # AI tools
   ai_ollama                   install_ai_ollama
   ai_lmstudio                 install_ai_lmstudio
-  ai_chatbots                 install_ai_chatbots
+  ai_chatbots_chatgpt         install_ai_chatbots_chatgpt
+  ai_chatbots_claude          install_ai_chatbots_claude
+  ai_chatbots_gemini          install_ai_chatbots_gemini
+  ai_chatbots_all             install_ai_chatbots_all
 
   # Browsers
   browsers_firefox            install_browsers_firefox
@@ -303,9 +306,22 @@ install_ai_lmstudio() {
   brew install --cask lm-studio
 }
 
-install_ai_chatbots() {
+install_ai_chatbots_chatgpt() {
   brew install --cask chatgpt
+}
+
+install_ai_chatbots_claude() {
   brew install --cask claude
+}
+
+install_ai_chatbots_gemini() {
+  brew install --cask google-gemini
+}
+
+install_ai_chatbots_all() {
+  install_ai_chatbots_chatgpt
+  install_ai_chatbots_claude
+  install_ai_chatbots_gemini
 }
 
 install_browsers_firefox() {
@@ -327,7 +343,7 @@ install_browsers_all() {
 }
 
 install_home_machine() {
-  install_ai_chatbots
+  install_ai_chatbots_all
   install_ai_dev_all
   install_browsers_edge
   install_dev_stack_angular
