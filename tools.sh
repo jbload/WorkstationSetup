@@ -367,6 +367,7 @@ install_home_machine() {
   brew install --cask microsoft-remote-desktop
   brew install --cask musescore
   brew install --cask permute
+  brew install --cask plex
   brew install sentry-cli
 }
 
