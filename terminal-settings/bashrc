@@ -334,8 +334,7 @@ gitbrall () {
 }
 
 gitcowt () {
-    local output
-    output=$(git cowt "$1") && echo "$output" && cd "$(echo "$output" | grep -oE '/.*')"
+    git cowt "$1" && cd "$(git wtpath "$1")"
 }
 
 gitgc () {

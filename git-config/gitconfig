@@ -16,11 +16,11 @@
 	churn = !git --no-pager log --name-only --oneline | grep -v ' ' | sort | uniq -c | sort -nr | head
 	cm = commit -m
 	co = checkout
-	cob = "!f() { git checkout -b $USER/$1; }; f"
+	cob = "!f() { test -n \"$1\" || { echo \"Usage: git cob <name>\"; exit 1; }; git checkout -b $USER/$1; }; f"
 	com = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
 	conflicts = !git diff --name-only --diff-filter=U
 	contrib = shortlog -e --summary --numbered
-	cowt = "!f() { WTDIR=${WORKSPACE:-$HOME}/.worktrees/$(basename $(git rev-parse --show-toplevel))/$1; git worktree add -b $USER/$1 \"$WTDIR\"; }; f"
+	cowt = "!f() { test -n \"$1\" || { echo \"Usage: git cowt <name>\"; exit 1; }; WTDIR=$(git wtpath \"$1\") && git worktree add -b $USER/$1 \"$WTDIR\" && echo \"$WTDIR\"; }; f"
 	cp = cherry-pick
 	dci = duet-commit
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
@@ -65,6 +65,11 @@
 	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
 	wip = !git add -u && git commit -m "WIP"
 	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+	wt = worktree
+	wtls = worktree list
+	wtpath = "!f() { test -n \"$1\" || { echo \"Usage: git wtpath <name>\"; exit 1; }; echo \"${WORKSPACE:-$HOME}/.worktrees/$(basename $(git rev-parse --show-toplevel))/$1\"; }; f"
+	wtprune = worktree prune
+	wtstart = "!f() { test -n \"$1\" || { echo \"Usage: git wtstart <name>\"; exit 1; }; git fetch --prune origin && WTDIR=$(git wtpath \"$1\") && BASE=$(git rev-parse --verify origin/$(git default)) && git worktree add -b $USER/$1 \"$WTDIR\" $BASE && echo \"$WTDIR\"; }; f"
 [branch]
 	autosetuprebase = always
 	sort = -committerdate
