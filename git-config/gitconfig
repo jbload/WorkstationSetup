@@ -2,9 +2,9 @@
 	skippedCherryPicks = false
 [alias]
 	aa = add -A
-	aamend = !git aa && git amend
-	aamendit = !git aa && git amendit
-	ac = !git add -A && git commit -m
+	aamend = "!f() { git aa && git amend; }; f"
+	aamendit = "!f() { git aa && git amendit; }; f"
+	ac = "!f() { git aa && git cm \"$@\"; }; f"
 	adc = !git add -A && git duet-commit -m
 	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
 	amend = commit --amend
@@ -32,20 +32,23 @@
 	ec = config --global -e
 	fixup = commit --fixup
 	ftdone = "!f() { DEFAULT=$(git default); FEATURE=$(git rev-parse --abbrev-ref HEAD); if OUTPUT=$(git status --porcelain | wc -l) && [ $OUTPUT -eq 0 ]; then git checkout -q ${1-$DEFAULT}; echo "On $DEFAULT branch. Pulling changes from remote."; git pull --rebase; echo "Merging changes from branch: $FEATURE"; git merge --squash $FEATURE; echo "Ready to commit."; else echo "Git repo is dirty."; fi }; f"
-	ftstart = "!f() { DEFAULT=$(git default); git checkout -q $DEFAULT; echo "On $DEFAULT branch. Pulling changes from remote."; git pull --rebase --prune; git checkout -b $1; echo "Checked out new branch: $1"; }; f"
+	ftstart = "!f() { git start \"$@\"; }; f"
 	hist = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	isclean = "!f() { test -z \"$(git status --porcelain)\" || { echo \"Git repo is dirty.\"; exit 1; }; }; f"
 	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 	lg = log --graph --decorate --oneline --all
 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	msq = merge --squash
 	prn = "!f() { git tag -l | xargs git tag -d; git fetch --tags && git fetch --prune && git gc; }; f"
+	precommit = "!f() { git isclean && git fetch --prune origin && git rebase origin/$(git default) && git status --short --branch; }; f"
 	pushf = pushup --force-with-lease
 	pushup = !git push -u origin HEAD
+	rb = "!f() { git isclean && git rebase ${1-origin/$(git default)}; }; f"
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
-	rbm = rebase master
+	rbm = "!f() { git rb \"$@\"; }; f"
 	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
 	reword = commit --amend
@@ -55,6 +58,7 @@
 	st = status
 	sta = stash
 	stashes = stash list
+	start = "!f() { test -n \"$1\" || { echo \"Usage: git start <branch-name>\"; exit 1; }; git isclean && git fetch --prune origin && BASE=$(git rev-parse --verify origin/$(git default)) && git checkout -b $USER/$1 $BASE; }; f"
 	sync = !git pull --rebase && git push
 	undo = reset HEAD~1 --mixed
 	unstage = restore --staged
