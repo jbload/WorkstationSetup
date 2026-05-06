@@ -1,3 +1,8 @@
+# To preserve machine-managed PowerShell profile entries, dot-source this file from $PROFILE:
+# . "$HOME/src/Three21/WorkstationSetup/terminal-settings/pwshrc.ps1"
+#
+# Machine-specific PowerShell settings can live in ~/.pwshrc-pre-init.ps1 or ~/.pwshrc-post-init.ps1.
+
 $ensureModulesInstalled = $true
 $useOhMyPosh = $true
 $ohMyPoshTheme = "$HOME\.oh-my-posh.justin.json" #Takuya

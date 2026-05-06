@@ -1,3 +1,8 @@
+# To preserve machine-managed ~/.zshrc entries, source this file from ~/.zshrc:
+# source ~/src/Three21/WorkstationSetup/terminal-settings/zshrc
+#
+# Machine-specific zsh settings can live in ~/.zshrc-pre-init or ~/.zshrc-post-init.
+
 # Exit if this is not an interactive terminal
 [[ $- != *i* ]] && return
 

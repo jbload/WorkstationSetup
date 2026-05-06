@@ -1,4 +1,9 @@
 # shellcheck shell=bash
+# To preserve machine-managed ~/.bashrc entries, source this file from ~/.bashrc:
+# source ~/src/Three21/WorkstationSetup/terminal-settings/bashrc
+#
+# Machine-specific bash settings can live in ~/.bashrc-pre-init or ~/.bashrc-post-init.
+
 # Exit if this is not an interactive terminal
 [[ $- != *i* ]] && return
 
