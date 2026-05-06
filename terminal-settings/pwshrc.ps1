@@ -89,7 +89,9 @@ if($useMicrok8s) {
     if(Get-Command "microk8s" -ErrorAction SilentlyContinue) {
         Write-Debug "Setting microk8s aliases: mks, kubectl"
         Set-Alias mks -Value "microk8s" -Option AllScope
-        Set-Alias kubectl -Value "microk8s kubectl" -Option AllScope
+        function global:kubectl {
+            microk8s kubectl @args
+        }
     }
 
     $stopwatch.Stop()

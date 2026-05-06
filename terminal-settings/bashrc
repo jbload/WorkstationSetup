@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Exit if this is not an interactive terminal
 [[ $- != *i* ]] && return
 
@@ -80,7 +81,11 @@ unset color_prompt force_color_prompt
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    if test -r ~/.dircolors; then
+        eval "$(dircolors -b ~/.dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -103,26 +108,26 @@ if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash
 fi
 
-if command -v microk8s kubectl version &> /dev/null; then
+if command -v microk8s > /dev/null 2>&1; then
     alias mks='microk8s'
     alias kubectl='microk8s kubectl'
 fi
 
-if command -v kubectl version &> /dev/null; then
+if command -v kubectl > /dev/null 2>&1; then
     alias k=kubectl
     alias kctx=kubectx
     . <(kubectl completion bash)
     complete -F __start_kubectl k
 fi
 
-if command -v terraform version &> /dev/null; then
+if command -v terraform > /dev/null 2>&1; then
     alias tf=terraform
     terraform_path=$(which terraform)
-    complete -o nospace -C $terraform_path terraform tf
+    complete -o nospace -C "$terraform_path" terraform tf
     unset terraform_path
 fi
 
-if [ -f $HOME/.kube/config ]; then
+if [ -f "$HOME/.kube/config" ]; then
     export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
 fi
 
@@ -141,8 +146,8 @@ else
     export KUBE_EDITOR=vi
 fi
 
-if [ -f $editor_path ]; then
-    export EDITOR=$editor_path
+if [ -n "$editor_path" ] && [ -f "$editor_path" ]; then
+    export EDITOR="$editor_path"
 fi
 
 unset editor_path
@@ -230,8 +235,8 @@ alias yarnup="yarn set version stable"
 alias yui="yarn upgrade-interactive"
 alias ~="cd ~"                              # ~:            Go Home
 
-cd () { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
-mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and jumps inside
+cd () { builtin cd "$@" || return; ll; }    # Always list directory contents upon 'cd'
+mcd () { mkdir -p "$1" && cd "$1" || return; } # mcd:       Makes new Dir and jumps inside
 ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in MacOS Quicklook Preview
 trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
 zipf () { zip -r "$1".zip "$1" ; }          # zipf:         To create a ZIP archive of a folder
@@ -289,7 +294,7 @@ linknodestable () {
         fi
     fi
 
-    echo Linking Homebrew Node formula: ${target_formula}...
+    echo Linking Homebrew Node formula: "$target_formula"...
     brew link --overwrite --force "$target_formula"
 }
 
@@ -327,14 +332,14 @@ gitbrall () {
 
     for repo in "${GIT_REPOS[@]}"
     do
-        pushd "$repo" &> /dev/null
+        pushd "$repo" &> /dev/null || continue
         echo "   - $(git branch --show-current) in $repo"
-        popd &> /dev/null
+        popd &> /dev/null || return
     done
 }
 
 gitcowt () {
-    git cowt "$1" && cd "$(git wtpath "$1")"
+    git cowt "$1" && cd "$(git wtpath "$1")" || return
 }
 
 gitgc () {
@@ -344,13 +349,13 @@ gitgc () {
 gitgcall () {
     for repo in "${GIT_REPOS[@]}"
     do
-        pushd "$repo" &> /dev/null
+        pushd "$repo" &> /dev/null || continue
 
         echo "********************************************************************************"
         echo "Performing maintenance on git repo: $repo..."
         gitgc
 
-        popd &> /dev/null
+        popd &> /dev/null || return
     done
 }
 
@@ -409,13 +414,13 @@ gitprune () {
 gitpruneall () {
     for repo in "${GIT_REPOS[@]}"
     do
-        pushd "$repo" &> /dev/null
+        pushd "$repo" &> /dev/null || continue
 
         echo "********************************************************************************"
         echo "Looking for local branches to delete from git repo: $repo..."
         gitprune
 
-        popd &> /dev/null
+        popd &> /dev/null || return
     done
 }
 
@@ -424,7 +429,7 @@ gitstall () {
 
     for repo in "${GIT_REPOS[@]}"
     do
-        pushd "$repo" &> /dev/null
+        pushd "$repo" &> /dev/null || continue
 
         if [ -n "$(git status --porcelain)" ]; then
             echo "********************************************************************************"
@@ -434,7 +439,7 @@ gitstall () {
             clean_repos+=("$repo")
         fi
 
-        popd &> /dev/null
+        popd &> /dev/null || return
     done
 
     if [ ${#clean_repos[@]} -gt 0 ]; then
@@ -452,7 +457,7 @@ gitsyncall () {
 
     for repo in "${GIT_REPOS[@]}"
     do
-        pushd "$repo" &> /dev/null
+        pushd "$repo" &> /dev/null || continue
 
         if [ -n "$(git status --porcelain)" ]; then
             dirty_repos+=("$repo")
@@ -461,21 +466,21 @@ gitsyncall () {
             echo "Synching git repo: $repo..."
             git up
 
-            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
+            if [ "$GIT_PUSH_DURING_SYNC" -eq 1 ]; then
                 git pushf
             fi
 
             git com
             git up
 
-            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
+            if [ "$GIT_PUSH_DURING_SYNC" -eq 1 ]; then
                 git pushf
             fi
 
             git co -
         fi
 
-        popd &> /dev/null
+        popd &> /dev/null || return
     done
 
     if [ ${#dirty_repos[@]} -gt 0 ]; then
@@ -523,11 +528,11 @@ if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_START="\033[01;32m\]\u@\h\[\033[00m\] \w"
     GIT_PROMPT_END="\n$ "
     GIT_PROMPT_THEME_NAME=Solarized
-    . $HOME/.bash-git-prompt/gitprompt.sh
+    . "$HOME/.bash-git-prompt/gitprompt.sh"
 fi
 
-if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]]; then
-    builtin cd $WORKSPACE
+if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]] && [ -d "$WORKSPACE" ]; then
+    builtin cd "$WORKSPACE" || return
 fi
 
 if [ -f ~/.bashrc-post-init ]; then

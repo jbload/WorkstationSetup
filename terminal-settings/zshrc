@@ -125,25 +125,27 @@ if [ -f ~/.oh-my-zsh-plugins ]; then
     . ~/.oh-my-zsh-plugins
 fi
 
-. $ZSH/oh-my-zsh.sh
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+    . "$ZSH/oh-my-zsh.sh"
+fi
 
 # User configuration
-if type microk8s > /dev/null; then
+if command -v microk8s > /dev/null 2>&1; then
     alias mks='microk8s'
     alias kubectl='microk8s kubectl'
 fi
 
-if type ng > /dev/null; then
+if command -v ng > /dev/null 2>&1; then
     source <(ng completion script)
 fi
 
-if type kubectl > /dev/null; then
+if command -v kubectl > /dev/null 2>&1; then
     alias k=kubectl
     alias kctx=kubectx
     source <(kubectl completion zsh)
 fi
 
-if type terraform > /dev/null; then
+if command -v terraform > /dev/null 2>&1; then
     alias tf=terraform
     terraform_path=$(which terraform)
     complete -o nospace -C $terraform_path terraform tf
@@ -162,14 +164,14 @@ for editor in subl zed code code-insiders cursor vi; do
     fi
 done
 
-if type vim > /dev/null; then
+if command -v vim > /dev/null 2>&1; then
     export KUBE_EDITOR=vim
 else
     export KUBE_EDITOR=vi
 fi
 
-if [ -f $editor_path ]; then
-    export EDITOR=$editor_path
+if [ -n "$editor_path" ] && [ -f "$editor_path" ]; then
+    export EDITOR="$editor_path"
 fi
 
 setopt APPEND_HISTORY
@@ -245,7 +247,7 @@ alias oc='opencode'
 alias openPorts='sudo lsof -i | grep LISTEN' # openPorts: All listening connections
 alias path='echo -e ${PATH//:/\\n}'         # path: Echo all executable Paths
 alias prprep='mvn -U clean verify'
-alias show_options='shopt'                  # Show_options: display bash options settings
+alias show_options='setopt'                 # Show_options: display zsh options settings
 alias showBlocked='sudo ipfw list'          # showBlocked: All ipfw rules inc/ blocked IPs
 alias swf='swift format --parallel --recursive --in-place'
 alias swfa='swift format --parallel --recursive --in-place .'
@@ -612,27 +614,33 @@ PS1='
 $(ssh_info)%{$fg[green]%}%~%u $(git_info)
 %(?.%{$fg[blue]%}.%{$fg[red]%})%(!.#.$)%{$reset_color%} '
 
-if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]]; then
-    builtin cd $WORKSPACE
+if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]] && [ -d "$WORKSPACE" ]; then
+    builtin cd "$WORKSPACE"
 fi
 
 if [ -f ~/.zshrc-post-init ]; then
     . ~/.zshrc-post-init
 fi
 
-if type pyenv > /dev/null; then
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-    export PKG_CONFIG_PATH="$(brew --prefix)/opt/mysql-client/lib/pkgconfig"
+if command -v pyenv > /dev/null 2>&1; then
     export PYENV_ROOT="$HOME/.pyenv"
     [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+
+    if pyenv virtualenv-init - > /dev/null 2>&1; then
+        eval "$(pyenv virtualenv-init -)"
+    fi
+
+    if command -v brew > /dev/null 2>&1 && MYSQL_CLIENT_PREFIX="$(brew --prefix mysql-client 2> /dev/null)"; then
+        export PKG_CONFIG_PATH="$MYSQL_CLIENT_PREFIX/lib/pkgconfig"
+    fi
 fi
 
-if type rbenv > /dev/null; then
+if command -v rbenv > /dev/null 2>&1; then
     eval "$(rbenv init -)"
 fi
 
-if type direnv > /dev/null; then
+if command -v direnv > /dev/null 2>&1; then
     eval "$(direnv hook zsh)"
 fi
 
