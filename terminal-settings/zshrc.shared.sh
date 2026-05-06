@@ -1,7 +1,8 @@
 # To preserve machine-managed ~/.zshrc entries, source this file from ~/.zshrc:
-# source ~/src/Three21/WorkstationSetup/terminal-settings/zshrc
+# source ~/src/Three21/WorkstationSetup/terminal-settings/zshrc.shared.sh
 #
-# Machine-specific zsh settings can live in ~/.zshrc-pre-init or ~/.zshrc-post-init.
+# Machine-specific zsh settings can live in ~/.zshrc.local-machine-config
+# or ~/.zshrc.local-machine-overrides.
 
 # Exit if this is not an interactive terminal
 [[ $- != *i* ]] && return
@@ -28,8 +29,8 @@ Or you can use wildcards like:
 '
 export WORKSPACE=~/src
 
-if [ -f ~/.zshrc-pre-init ]; then
-    . ~/.zshrc-pre-init
+if [ -f ~/.zshrc.local-machine-config ]; then
+    . ~/.zshrc.local-machine-config
 fi
 
 filtered_repos=()
@@ -623,8 +624,8 @@ if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]] && [ -d "$WORKSPACE" ]; then
     builtin cd "$WORKSPACE"
 fi
 
-if [ -f ~/.zshrc-post-init ]; then
-    . ~/.zshrc-post-init
+if [ -f ~/.zshrc.local-machine-overrides ]; then
+    . ~/.zshrc.local-machine-overrides
 fi
 
 if command -v pyenv > /dev/null 2>&1; then

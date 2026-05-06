@@ -1,7 +1,8 @@
 # To preserve machine-managed PowerShell profile entries, dot-source this file from $PROFILE:
-# . "$HOME/src/Three21/WorkstationSetup/terminal-settings/pwshrc.ps1"
+# . "$HOME/src/Three21/WorkstationSetup/terminal-settings/pwshrc.shared.ps1"
 #
-# Machine-specific PowerShell settings can live in ~/.pwshrc-pre-init.ps1 or ~/.pwshrc-post-init.ps1.
+# Machine-specific PowerShell settings can live in ~/.pwshrc.local-machine-config.ps1
+# or ~/.pwshrc.local-machine-overrides.ps1.
 
 $ensureModulesInstalled = $true
 $useOhMyPosh = $true
@@ -46,9 +47,9 @@ function Confirm-ModuleInstalled {
     return $isInstalled
 }
 
-if(Test-Path "$HOME\.pwshrc-pre-init.ps1") {
-    Write-Debug "Loading .pwshrc-pre-init.ps1"
-    . "$HOME\.pwshrc-pre-init.ps1"
+if(Test-Path "$HOME\.pwshrc.local-machine-config.ps1") {
+    Write-Debug "Loading .pwshrc.local-machine-config.ps1"
+    . "$HOME\.pwshrc.local-machine-config.ps1"
 }
 
 $isPackageManagerProfile = $PROFILE -like "*Nuget_profile.ps1"
@@ -358,9 +359,9 @@ function Remove-BinFolders() {
     }
 }
 
-if(Test-Path "$HOME\.pwshrc-post-init.ps1") {
-    Write-Debug "Loading .pwshrc-post-init.ps1"
-    . "$HOME\.pwshrc-post-init.ps1"
+if(Test-Path "$HOME\.pwshrc.local-machine-overrides.ps1") {
+    Write-Debug "Loading .pwshrc.local-machine-overrides.ps1"
+    . "$HOME\.pwshrc.local-machine-overrides.ps1"
 }
 
 if($goToWorkspaceOnStartup) {

@@ -1,8 +1,8 @@
 # To preserve machine-managed ~/.gitconfig entries, include this file from ~/.gitconfig:
 # [include]
-# 	path = ~/src/Three21/WorkstationSetup/git-config/gitconfig
+# 	path = ~/src/Three21/WorkstationSetup/git-config/gitconfig.shared
 #
-# Machine-specific Git settings can live in ~/.gitconfig_custom.
+# Include gitconfig.macos, gitconfig.linux, or gitconfig.windows next, then ~/.gitconfig.local-machine.
 
 [advice]
 	skippedCherryPicks = false
@@ -83,6 +83,7 @@
     	ui = auto
 [core]
 	editor = code --wait
+	hooksPath = ~/git-hooks
 [diff]
 	algorithm = histogram
 	colorMoved = plain
@@ -98,8 +99,9 @@
 	autocorrect = prompt
 [http]
 	postBuffer = 524288000
-[include]
-	path = ~/.gitconfig_custom	
+[init]
+	defaultBranch = master
+	templateDir = ~/git-templates
 [merge]
 	tool = bc
 [mergetool]
@@ -127,4 +129,5 @@
 [transfer]
 	fsckobjects = true	
 [user]
+	email = jbload@users.noreply.github.com
 	name = Justin Loadholtz

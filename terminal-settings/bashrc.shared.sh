@@ -1,8 +1,9 @@
 # shellcheck shell=bash
 # To preserve machine-managed ~/.bashrc entries, source this file from ~/.bashrc:
-# source ~/src/Three21/WorkstationSetup/terminal-settings/bashrc
+# source ~/src/Three21/WorkstationSetup/terminal-settings/bashrc.shared.sh
 #
-# Machine-specific bash settings can live in ~/.bashrc-pre-init or ~/.bashrc-post-init.
+# Machine-specific bash settings can live in ~/.bashrc.local-machine-config
+# or ~/.bashrc.local-machine-overrides.
 
 # Exit if this is not an interactive terminal
 [[ $- != *i* ]] && return
@@ -28,8 +29,8 @@ Or you can use wildcards like:
     export GIT_REPOS=(~/src/client-*)
 '
 export WORKSPACE=~/src
-if [ -f ~/.bashrc-pre-init ]; then
-    . ~/.bashrc-pre-init
+if [ -f ~/.bashrc.local-machine-config ]; then
+    . ~/.bashrc.local-machine-config
 fi
 
 filtered_repos=()
@@ -540,8 +541,8 @@ if [[ -v GO_TO_WORKSPACE_ON_STARTUP ]] && [ -d "$WORKSPACE" ]; then
     builtin cd "$WORKSPACE" || return
 fi
 
-if [ -f ~/.bashrc-post-init ]; then
-    . ~/.bashrc-post-init
+if [ -f ~/.bashrc.local-machine-overrides ]; then
+    . ~/.bashrc.local-machine-overrides
 fi
 
 if command -v pyenv &> /dev/null; then
