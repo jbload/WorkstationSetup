@@ -1,0 +1,47 @@
+{
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "tabs": {
+    "file_icons": true,
+    "git_status": true
+  },
+  "title_bar": {
+    "show_branch_status_icon": true
+  },
+  "agent": {
+    "dock": "right",
+    "play_sound_when_agent_done": "always",
+    "model_parameters": [],
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-3.7-sonnet"
+    }
+  },
+  "icon_theme": "Material Icon Theme",
+  "base_keymap": "JetBrains",
+  "buffer_font_size": 16,
+  "buffer_font_family": "Cascadia Code PL",
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "edit_predictions": {
+    "provider": "zed",
+    "mode": "eager"
+  },
+  "restore_on_startup": "last_workspace",
+  "session": {
+    "restore_unsaved_buffers": true
+  }
+}

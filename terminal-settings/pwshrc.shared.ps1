@@ -167,6 +167,8 @@ else {
     Set-Alias edit -Value notepad -Option AllScope
 }
 
+Set-Alias cx -Value codex -Option AllScope
+
 $env:NODE_OPTIONS = "--max_old_space_size=8192"
 $env:PIPENV_VENV_IN_PROJECT = "1"
 $env:ASPNETCORE_ENVIRONMENT = "Development"
