@@ -55,6 +55,7 @@
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
 	rbm = "!f() { git rb \"$@\"; }; f"
+	rbo = "!f() { git isclean && git rebase --onto ${2-origin/$(git default)} \"$1\"; }; f" # Replay <fork-point>..HEAD onto a new base (default origin/master); use when your branch sits on feature branches that got squash-merged
 	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
 	reword = commit --amend
