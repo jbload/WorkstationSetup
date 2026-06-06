@@ -1,22 +1,22 @@
 {
   "project_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "outline_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "collaboration_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "git_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "tabs": {
     "file_icons": true,
-    "git_status": true
+    "git_status": true,
   },
   "title_bar": {
-    "show_branch_status_icon": true
+    "show_branch_status_icon": true,
   },
   "agent": {
     "dock": "right",
@@ -24,8 +24,8 @@
     "model_parameters": [],
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-3.7-sonnet"
-    }
+      "model": "claude-3.7-sonnet",
+    },
   },
   "icon_theme": "Material Icon Theme",
   "base_keymap": "JetBrains",
@@ -34,14 +34,13 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "One Dark",
   },
   "edit_predictions": {
     "provider": "zed",
-    "mode": "eager"
+    "mode": "eager",
   },
-  "restore_on_startup": "last_workspace",
   "session": {
-    "restore_unsaved_buffers": true
-  }
+    "restore_unsaved_buffers": true,
+  },
 }
