@@ -160,6 +160,7 @@ install_git_gui_apps() {
 install_pair_programming_tools() {
   brew tap git-duet/tap
   brew install git-duet
+  brew trust --formula git-duet/tap/git-duet
 }
 
 install_dev_stack_python() {
@@ -197,6 +198,7 @@ install_dev_stack_spring_boot() {
   install_dev_stack_java
   brew tap spring-io/tap
   brew install spring-boot
+  brew trust --formula spring-io/tap/spring-boot
 }
 
 install_dev_stack_dotnet() {
@@ -222,6 +224,7 @@ install_kubernetes_cli() {
 install_microk8s() {
   brew tap ubuntu/microk8s
   brew install microk8s
+  brew trust --formula ubuntu/microk8s/microk8s
 }
 
 install_cloud_aws_cli() {
@@ -368,7 +371,10 @@ install_home_machine() {
   brew install --cask musescore
   brew install --cask permute
   brew install --cask plex
+
+  brew tap getsentry/tools
   brew install sentry-cli
+  brew trust --formula getsentry/tools/sentry-cli
 }
 
 install_home_machine_optionals() {
