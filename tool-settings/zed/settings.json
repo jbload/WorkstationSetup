@@ -28,7 +28,7 @@
     },
   },
   "icon_theme": "Material Icon Theme",
-  "base_keymap": "JetBrains",
+  "base_keymap": "SublimeText",
   "buffer_font_size": 16,
   "buffer_font_family": "Cascadia Code PL",
   "theme": {
@@ -40,7 +40,10 @@
     "provider": "zed",
     "mode": "eager",
   },
-  "session": {
-    "restore_unsaved_buffers": true,
+  "restore_on_startup": "last_session",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+    "anthropic_retention": false,
   },
 }

@@ -48,6 +48,12 @@ unset filtered_repos
 autoload -U +X bashcompinit && bashcompinit
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+if type brew &>/dev/null; then
+    eval "$(brew shellenv)"
+    autoload -Uz compinit
+    compinit
+fi
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:/usr/local/bin/

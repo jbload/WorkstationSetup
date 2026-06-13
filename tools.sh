@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+SCRIPT_DIR="${0:A:h}"
+
 typeset -A INSTALLERS
 INSTALLERS=(
   # Core installations
@@ -117,6 +119,8 @@ install_editors_vscode() {
 
 install_editors_zed() {
   brew install --cask zed
+  mkdir -p "$HOME/.config/zed"
+  ln -sf "$SCRIPT_DIR/tool-settings/zed/settings.json" "$HOME/.config/zed/settings.json"
 }
 
 install_editors_all() {
@@ -128,10 +132,16 @@ install_editors_all() {
 install_terminals_cmux() {
   brew install --cask cmux
   sudo ln -sf "/Applications/cmux.app/Contents/Resources/bin/cmux" /usr/local/bin/cmux
+  mkdir -p "$HOME/.config/cmux"
+  ln -sf "$SCRIPT_DIR/terminal-settings/cmux.json" "$HOME/.config/cmux/cmux.json"
+  mkdir -p "$HOME/Library/Application Support/com.cmuxterm.app"
+  ln -sf "$SCRIPT_DIR/terminal-settings/ghostty.conf" "$HOME/Library/Application Support/com.cmuxterm.app/config.ghostty"
 }
 
 install_terminals_ghostty() {
   brew install --cask ghostty
+  mkdir -p "$HOME/Library/Application Support/com.mitchellh.ghostty"
+  ln -sf "$SCRIPT_DIR/terminal-settings/ghostty.conf" "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
 }
 
 install_terminals_iterm2() {
