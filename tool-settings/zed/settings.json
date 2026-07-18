@@ -15,6 +15,11 @@
     "file_icons": true,
     "git_status": true,
   },
+  "preview_tabs": {
+    "enabled": false,
+    "enable_preview_from_file_finder": false,
+    "enable_preview_from_code_navigation": false,
+  },
   "title_bar": {
     "show_branch_status_icon": true,
   },
@@ -39,6 +44,9 @@
   "edit_predictions": {
     "provider": "zed",
     "mode": "eager",
+  },
+  "general": {
+    "workspace_restoration": "always",
   },
   "restore_on_startup": "last_session",
   "telemetry": {
