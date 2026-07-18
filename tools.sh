@@ -283,7 +283,6 @@ install_ai_dev_claude_code_mcp() {
 
 install_ai_dev_codex() {
     brew install codex
-    brew install --cask codex-app
 }
 
 install_ai_dev_codex_mcp() {
