@@ -18,7 +18,7 @@
   "preview_tabs": {
     "enabled": false,
     "enable_preview_from_file_finder": false,
-    "enable_preview_from_code_navigation": false,
+    "enable_keep_preview_on_code_navigation": false,
   },
   "title_bar": {
     "show_branch_status_icon": true,
@@ -54,4 +54,9 @@
     "metrics": false,
     "anthropic_retention": false,
   },
+  "languages": {
+    "JSON": {
+      "format_on_save": "on"
+    }
+  }
 }
