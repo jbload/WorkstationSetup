@@ -56,9 +56,8 @@ INSTALLERS=(
   # AI Development tools
   ai_dev_github_copilot       install_ai_dev_github_copilot
   ai_dev_claude_code          install_ai_dev_claude_code
-  ai_dev_claude_code_mcp      install_ai_dev_claude_code_mcp
   ai_dev_codex                install_ai_dev_codex
-  ai_dev_codex_mcp            install_ai_dev_codex_mcp
+  ai_dev_xcode_mcp            install_ai_dev_xcode_mcp
   ai_dev_conductor            install_ai_dev_conductor
   ai_dev_opencode             install_ai_dev_opencode
   ai_dev_cursor               install_ai_dev_cursor
@@ -277,20 +276,30 @@ install_ai_dev_claude_code() {
   brew install --cask claude-code
 }
 
-install_ai_dev_claude_code_mcp() {
-  claude mcp add --transport stdio xcode -- xcrun mcpbridge
-}
-
 install_ai_dev_codex() {
-    brew install codex
+  brew install codex
 }
 
-install_ai_dev_codex_mcp() {
+install_ai_dev_xcode_mcp() {
+  brew install getsentry/xcodebuildmcp/xcodebuildmcp
+
+  if command -v claude >/dev/null 2>&1; then
+    claude mcp add --transport stdio xcode -- xcrun mcpbridge
+    claude mcp add XcodeBuildMCP -- xcodebuildmcp mcp
+  else
+    echo "Claude Code is not installed; skipping Xcode MCP configuration."
+  fi
+
+  if command -v codex >/dev/null 2>&1; then
     codex mcp add xcode -- xcrun mcpbridge
+    codex mcp add XcodeBuildMCP -- xcodebuildmcp mcp
+  else
+    echo "Codex is not installed; skipping Xcode MCP configuration."
+  fi
 }
 
 install_ai_dev_conductor() {
-    brew install --cask conductor
+  brew install --cask conductor
 }
 
 install_ai_dev_opencode() {
@@ -304,6 +313,7 @@ install_ai_dev_cursor() {
 install_ai_dev_all() {
   install_ai_dev_claude_code
   install_ai_dev_codex
+  install_ai_dev_xcode_mcp
   install_ai_dev_conductor
   install_ai_dev_cursor
   install_ai_dev_github_copilot
