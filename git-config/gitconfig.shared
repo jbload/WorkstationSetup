@@ -57,7 +57,7 @@
 	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	msq = merge --squash
 	precommit = "!f() { git isclean && git fetch --prune origin && git rebase origin/$(git default) && git status --short --branch; }; f"
-	prl = "!f() { git fetch origin --prune --prune-tags && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | while read -r branch track; do test \"$track\" = \"[gone]\" && git branch -d \"$branch\"; done; }; f"
+	prl = "!f() { git fetch origin --prune --prune-tags && git worktree prune && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | while read -r branch track; do test \"$track\" = \"[gone]\" && git branch -d \"$branch\"; done; }; f"
 	pushf = pushup --force-with-lease
 	pushup = !git push -u origin HEAD
 	rb = "!f() { git isclean && git rebase ${1-origin/$(git default)}; }; f"
@@ -139,7 +139,7 @@
 	migrate = Move commits from the current branch onto another base
 	msq = Alias for 'git merge --squash' - merge commits without creating a merge commit
 	precommit = Fetch, rebase onto the default branch, and show status
-	prl = Remove local branches whose remote tracking branches are gone
+	prl = Prune stale worktree metadata and remove local branches whose remote tracking branches are gone
 	pushf = Force-push with lease protection
 	pushup = Push the current branch and set its upstream
 	rb = Rebase onto the specified or default branch
