@@ -23,16 +23,20 @@
 	cm = commit -m
 	co = checkout
 	cob = "!f() { test -n \"$1\" || { echo \"Usage: git cob <name>\"; exit 1; }; git checkout -b $USER/$1; }; f"
-	com = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
+	cod = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT}; }; f"
 	conflicts = !git diff --name-only --diff-filter=U
 	contrib = shortlog -e --summary --numbered
 	cowt = "!f() { test -n \"$1\" || { echo \"Usage: git cowt <name>\"; exit 1; }; WTDIR=$(git wtpath \"$1\") && git worktree add -b $USER/$1 \"$WTDIR\" && echo \"$WTDIR\"; }; f"
 	cp = cherry-pick
+	current = branch --show-current
 	dci = duet-commit
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 	di = diff
 	dih = diff HEAD
 	dis = diff --staged
+	dist = diff --stat
+	disth = diff HEAD --stat
+	dists = diff --staged --stat
 	dmg = duet-merge
 	drb = rebase -i --exec 'git duet-commit --amend'
 	drv = duet-revert
@@ -46,31 +50,33 @@
 	ftstart = "!f() { git start \"$@\"; }; f"
 	hist = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 	isclean = "!f() { test -z \"$(git status --porcelain)\" || { echo \"Git repo is dirty.\"; exit 1; }; }; f"
+	last = log -1 --oneline
 	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 	lg = log --graph --decorate --oneline --all
 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 	migrate = "!f() { DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f" # Moves a set of commits from the current branch to another
 	msq = merge --squash
-	prn = "!f() { git tag -l | xargs git tag -d; git fetch --tags && git fetch --prune && git gc; }; f"
 	precommit = "!f() { git isclean && git fetch --prune origin && git rebase origin/$(git default) && git status --short --branch; }; f"
+	prl = "!f() { git fetch origin --prune --prune-tags && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | while read -r branch track; do test \"$track\" = \"[gone]\" && git branch -d \"$branch\"; done; }; f"
 	pushf = pushup --force-with-lease
 	pushup = !git push -u origin HEAD
 	rb = "!f() { git isclean && git rebase ${1-origin/$(git default)}; }; f"
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
-	rbm = "!f() { git rb \"$@\"; }; f"
 	rbo = "!f() { git isclean && git rebase --onto ${2-origin/$(git default)} \"$1\"; }; f" # Replay <fork-point>..HEAD onto a new base (default origin/master); use when your branch sits on feature branches that got squash-merged
 	reauthor = commit --amend --reset-author --no-edit
 	remotes = remote -v
 	reword = commit --amend
 	rhh = reset HEAD --hard
+	root = rev-parse --show-toplevel
 	save = !git add -A && git commit -m 'SAVEPOINT'
 	squash = commit --squash
 	st = status
 	sta = stash
-	stashes = stash list
 	start = "!f() { test -n \"$1\" || { echo \"Usage: git start <branch-name>\"; exit 1; }; git isclean && git fetch --prune origin && BASE=$(git rev-parse --verify origin/$(git default)) && git checkout -b $USER/$1 $BASE; }; f"
+	stashes = stash list
+	stb = status --short --branch
 	sync = !git pull --rebase && git push
 	undo = reset HEAD~1 --mixed
 	unstage = restore --staged
