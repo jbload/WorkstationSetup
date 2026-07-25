@@ -12,7 +12,7 @@
 	aamendit = "!f() { git aa && git amendit; }; f"
 	ac = "!f() { git aa && git cm \"$@\"; }; f"
 	adc = !git add -A && git duet-commit -m
-	aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
+	aliases = "!f() { git config --get-regexp '^alias\\.' | sed 's/^alias\\.//' | { if [ \"$#\" -eq 0 ]; then cat; else grep -F -- \"$1\"; fi; }; }; f"
 	amend = commit --amend
 	amendit = commit --amend --no-edit
 	bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
