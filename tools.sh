@@ -11,14 +11,12 @@ INSTALLERS=(
   editors_sublime             install_editors_sublime
   editors_vscode              install_editors_vscode
   editors_zed                 install_editors_zed
-  editors_all                 install_editors_all
 
   # Terminals
   terminals_cmux              install_terminals_cmux
   terminals_ghostty           install_terminals_ghostty
   terminals_iterm2            install_terminals_iterm2
   terminals_warp              install_terminals_warp
-  terminals_all               install_terminals_all
 
   # JetBrains
   jetbrains                   install_jetbrains
@@ -61,7 +59,6 @@ INSTALLERS=(
   ai_dev_conductor            install_ai_dev_conductor
   ai_dev_opencode             install_ai_dev_opencode
   ai_dev_cursor               install_ai_dev_cursor
-  ai_dev_all                  install_ai_dev_all
 
   # AI tools
   ai_ollama                   install_ai_ollama
@@ -69,13 +66,11 @@ INSTALLERS=(
   ai_chatbots_chatgpt         install_ai_chatbots_chatgpt
   ai_chatbots_claude          install_ai_chatbots_claude
   ai_chatbots_gemini          install_ai_chatbots_gemini
-  ai_chatbots_all             install_ai_chatbots_all
 
   # Browsers
   browsers_firefox            install_browsers_firefox
   browsers_chrome             install_browsers_chrome
   browsers_edge               install_browsers_edge
-  browsers_all                install_browsers_all
 
   # Machine presets
   @home_setup                 install_home_machine
@@ -93,15 +88,18 @@ install_essentials() {
   brew install --cask postman
   brew install --cask powershell
   brew install --cask rectangle
-  brew install ack
+  brew install bat
   brew install coreutils
   brew install direnv
-  brew install fig
+  brew install fd
   brew install git
   brew install git-lfs
+  brew install gh
   brew install httpie
   brew install jq
   brew install ripgrep
+  brew install shellcheck
+  brew install shfmt
   brew install swagger-codegen
   brew install tmux
   brew install vim
@@ -120,12 +118,6 @@ install_editors_zed() {
   brew install --cask zed
   mkdir -p "$HOME/.config/zed"
   ln -sf "$SCRIPT_DIR/tool-settings/zed/settings.json" "$HOME/.config/zed/settings.json"
-}
-
-install_editors_all() {
-  install_editors_sublime
-  install_editors_vscode
-  install_editors_zed
 }
 
 install_terminals_cmux() {
@@ -151,13 +143,6 @@ install_terminals_warp() {
   brew install --cask warp
 }
 
-install_terminals_all() {
-  install_terminals_cmux
-  install_terminals_ghostty
-  install_terminals_iterm2
-  install_terminals_warp
-}
-
 install_jetbrains() {
   brew install --cask jetbrains-toolbox
 }
@@ -167,9 +152,7 @@ install_git_gui_apps() {
 }
 
 install_pair_programming_tools() {
-  brew tap git-duet/tap
-  brew install git-duet
-  brew trust --formula git-duet/tap/git-duet
+  brew install git-duet/tap/git-duet
 }
 
 install_dev_stack_python() {
@@ -205,9 +188,7 @@ install_dev_stack_java() {
 
 install_dev_stack_spring_boot() {
   install_dev_stack_java
-  brew tap spring-io/tap
-  brew install spring-boot
-  brew trust --formula spring-io/tap/spring-boot
+  brew install spring-io/tap/spring-boot
 }
 
 install_dev_stack_dotnet() {
@@ -218,6 +199,7 @@ install_dev_stack_ios() {
   brew install carthage
   brew install fastlane
   brew install --cask sf-symbols
+  brew install swift-format
 }
 
 install_docker() {
@@ -231,9 +213,7 @@ install_kubernetes_cli() {
 }
 
 install_microk8s() {
-  brew tap ubuntu/microk8s
-  brew install microk8s
-  brew trust --formula ubuntu/microk8s/microk8s
+  brew install ubuntu/microk8s/microk8s
 }
 
 install_cloud_aws_cli() {
@@ -266,7 +246,6 @@ install_redis() {
 }
 
 install_ai_dev_github_copilot() {
-  brew install gh
   gh auth login
   gh extension install github/gh-copilot
   brew install --cask github-copilot-for-xcode
@@ -310,16 +289,6 @@ install_ai_dev_cursor() {
   brew install --cask cursor
 }
 
-install_ai_dev_all() {
-  install_ai_dev_claude_code
-  install_ai_dev_codex
-  install_ai_dev_xcode_mcp
-  install_ai_dev_conductor
-  install_ai_dev_cursor
-  install_ai_dev_github_copilot
-  install_ai_dev_opencode
-}
-
 install_ai_ollama() {
   brew install ollama
 }
@@ -340,12 +309,6 @@ install_ai_chatbots_gemini() {
   brew install --cask google-gemini
 }
 
-install_ai_chatbots_all() {
-  install_ai_chatbots_chatgpt
-  install_ai_chatbots_claude
-  install_ai_chatbots_gemini
-}
-
 install_browsers_firefox() {
   brew install --cask firefox
 }
@@ -358,15 +321,17 @@ install_browsers_edge() {
   brew install --cask microsoft-edge
 }
 
-install_browsers_all() {
-  install_browsers_chrome
-  install_browsers_edge
-  install_browsers_firefox
-}
-
 install_home_machine() {
-  install_ai_chatbots_all
-  install_ai_dev_all
+  install_ai_chatbots_chatgpt
+  install_ai_chatbots_claude
+  install_ai_chatbots_gemini
+  install_ai_dev_claude_code
+  install_ai_dev_codex
+  install_ai_dev_xcode_mcp
+  install_ai_dev_conductor
+  install_ai_dev_cursor
+  install_ai_dev_github_copilot
+  install_ai_dev_opencode
   install_browsers_edge
   install_dev_stack_angular
   install_dev_stack_dotnet
@@ -375,12 +340,17 @@ install_home_machine() {
   install_dev_stack_python
   install_dev_stack_react
   install_docker
-  install_editors_all
+  install_editors_sublime
+  install_editors_vscode
+  install_editors_zed
   install_essentials
   install_jetbrains
   install_kubernetes_cli
   install_mysql_client
-  install_terminals_all
+  install_terminals_cmux
+  install_terminals_ghostty
+  install_terminals_iterm2
+  install_terminals_warp
 
   brew install --cask downie
   brew install --cask guitar-pro
@@ -391,9 +361,7 @@ install_home_machine() {
   brew install --cask permute
   brew install --cask plex
 
-  brew tap getsentry/tools
-  brew install sentry-cli
-  brew trust --formula getsentry/tools/sentry-cli
+  brew install getsentry/tools/sentry-cli
 }
 
 install_home_machine_optionals() {
