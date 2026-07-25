@@ -31,10 +31,15 @@
 	dci = duet-commit
 	default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 	di = diff
+	dih = diff HEAD
+	dis = diff --staged
 	dmg = duet-merge
 	drb = rebase -i --exec 'git duet-commit --amend'
 	drv = duet-revert
-	ds = diff --staged
+	dt = difftool
+	dtd = difftool --dir-diff
+	dth = difftool HEAD
+	dts = difftool --staged
 	ec = config --global -e
 	fixup = commit --fixup
 	ftdone = "!f() { DEFAULT=$(git default); FEATURE=$(git rev-parse --abbrev-ref HEAD); if OUTPUT=$(git status --porcelain | wc -l) && [ $OUTPUT -eq 0 ]; then git checkout -q ${1-$DEFAULT}; echo "On $DEFAULT branch. Pulling changes from remote."; git pull --rebase; echo "Merging changes from branch: $FEATURE"; git merge --squash $FEATURE; echo "Ready to commit."; else echo "Git repo is dirty."; fi }; f"
