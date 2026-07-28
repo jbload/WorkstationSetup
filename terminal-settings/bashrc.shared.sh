@@ -476,7 +476,7 @@ gitsyncall () {
                 git pushf
             fi
 
-            git com
+            git cod
             git up
 
             if [ "$GIT_PUSH_DURING_SYNC" -eq 1 ]; then
@@ -517,7 +517,7 @@ remind() {
     echo "git:"
     echo "- Delete remote branch: git push origin --delete branch_name"
     echo "- Stop tracking a file: git update-index --assume-unchanged [<file>...]"
-    echo "- Fix 'refs/remotes/origin/HEAD is not a symbolic ref' error when using git com alias: git remote set-head origin master"
+    echo "- Fix 'refs/remotes/origin/HEAD is not a symbolic ref' error when using git cod alias: git remote set-head origin master"
     echo
     echo 'Docker:'
     echo "- Remove all Docker images: docker rmi \$(docker images -q) --force"
