@@ -25,6 +25,7 @@
 ## Git Operations
 - Safe read-only git commands such as git status, git diff, git log, git show, git branch --show-current, git rev-parse, and git ls-tree may be run when needed to inspect repository state.
 - Do not offer or suggest git operations.
+- When renaming or moving files, use `git mv` and commit the rename separately from any content changes. This ensures git's rename detection tracks it as a move, keeping the PR diff clean. If the file also needs content changes, make those in a follow-up commit.
 
 ## Tool Settings
 - Prefer saving allowed permissions to the user-level settings file over the project local settings file.
