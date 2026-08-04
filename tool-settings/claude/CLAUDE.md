@@ -5,6 +5,7 @@
 
 ## Collaboration
 - When authoring commit messages and PR summaries, DO NOT include references to AI coding assistants (e.g., Codex, Claude Code, Copilot).
+- PR descriptions must describe the final state of the branch relative to the base branch — not the journey taken to get there. Do not mention intermediate changes that were later amended or superseded within the same branch (e.g., "Replaced Map with Caffeine cache" is wrong if the Map never existed in the base branch). Use `git diff <base-branch>...HEAD` to understand what actually changed relative to the base.
 - When you fix code in response to PR feedback, ALWAYS mark that feedback comment as resolved. 
 - When instructed by the user not to implement a fix suggested in PR feedback, ALWAYS respond to that feedback with a brief comment explaining why it will not be implemented then mark that feedback comment as resolved.
 - When responding to feedback or making a follow-up tweak to a commit you created on the current branch, amend that commit rather than creating a new one. Err on the side of amending — transient commits like "Fixed typo," "Renamed variable," or "Fixed build" should never appear in branch history. Keep the branch history as a clean sequence of logical, meaningful commits that tell the story of what you did and why. Never amend commits that already exist in the base branch.
