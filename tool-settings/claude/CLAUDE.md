@@ -5,6 +5,7 @@
 
 ## Collaboration
 - When authoring commit messages and PR summaries, DO NOT include references to AI coding assistants (e.g., Codex, Claude Code, Copilot).
+- Commit subject lines (the first line) must not use conventional commit prefixes (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`, `ci:`, `style:`, `perf:`, `build:`, `revert:`). Write a plain sentence with normal casing — e.g., "Add request table schema support" not "feat: add request table schema support". The extended body below the subject line is unaffected by this rule.
 - PR descriptions must describe the final state of the branch relative to the base branch — not the journey taken to get there. Do not mention intermediate changes that were later amended or superseded within the same branch (e.g., "Replaced Map with Caffeine cache" is wrong if the Map never existed in the base branch). Use `git diff <base-branch>...HEAD` to understand what actually changed relative to the base.
 - When you fix code in response to PR feedback, ALWAYS mark that feedback comment as resolved. 
 - When instructed by the user not to implement a fix suggested in PR feedback, ALWAYS respond to that feedback with a brief comment explaining why it will not be implemented then mark that feedback comment as resolved.
