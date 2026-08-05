@@ -200,6 +200,7 @@ install_dev_stack_ios() {
   brew install fastlane
   brew install --cask sf-symbols
   brew install swift-format
+  brew install xcbeautify
 }
 
 install_docker() {
