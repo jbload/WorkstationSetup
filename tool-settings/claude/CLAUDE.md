@@ -10,6 +10,22 @@
 - When instructed by the user not to implement a fix suggested in PR feedback, ALWAYS respond to that feedback with a brief comment explaining why it will not be implemented then mark that feedback comment as resolved.
 - When responding to feedback or making a follow-up tweak to a commit you created on the current branch, amend that commit rather than creating a new one. Err on the side of amending — transient commits like "Fixed typo," "Renamed variable," or "Fixed build" should never appear in branch history. Keep the branch history as a clean sequence of logical, meaningful commits that tell the story of what you did and why. Never amend commits that already exist in the base branch.
 
+## Incremental Implementation
+The following workflow activates ONLY when the user explicitly requests "incremental implementation" or "logical commits." Do not use this workflow otherwise.
+
+When activated:
+1. **Plan first.** Before writing any code, propose a numbered list of commits. Each commit must be a self-contained, testable chunk of functionality — not an architectural layer. Think "what can the user run and verify?" not "what abstraction layer is this?"
+   - Wrong: "Add all models" → "Add all DAOs" → "Add all services"
+   - Right: "Add column migration and the DAO/service code to populate it" → "Add the dry-run path end-to-end" → "Add the delete path"
+2. **Get approval on the plan** before implementing anything. The user may reorder, split, merge, or remove items.
+3. **Implement one commit at a time.** After implementing a commit, stop and present the work for review. Do not proceed to the next commit until the user says to commit and move on.
+4. **Track progress.** After each commit, display the full list with completion status:
+   - ✅ Completed commits
+   - 🔨 Current commit (if in progress)
+   - ⬚ Remaining commits
+5. **Amend, don't stack fixups.** If the user requests tweaks to the current commit's code, amend that commit per the existing Collaboration rules — do not create separate fixup commits.
+6. **The plan can evolve.** The user may adjust the remaining plan at any point. Update the list accordingly.
+
 ## Coding Style
 - Prefer self-documenting code over comments.
 - Do not make drive-by changes to code you are not otherwise modifying. No renaming variables "for clarity," no reformatting untouched lines, no reorganizing imports in files you didn't change. Keep diffs focused on the task at hand.
