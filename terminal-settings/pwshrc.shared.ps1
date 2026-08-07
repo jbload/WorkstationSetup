@@ -167,7 +167,9 @@ else {
     Set-Alias edit -Value notepad -Option AllScope
 }
 
+Set-Alias cc -Value claude -Option AllScope
 Set-Alias cx -Value codex -Option AllScope
+Set-Alias oc -Value opencode -Option AllScope
 
 $env:NODE_OPTIONS = "--max_old_space_size=8192"
 $env:PIPENV_VENV_IN_PROJECT = "1"
@@ -182,16 +184,22 @@ function .5 { cd ../../../../.. }
 function .6 { cd ../../../../../.. }
 function psrc { . ~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1 }
 function cd.. { cd .. }
+function ccc { claude --continue @args }
+function ccr { claude --resume @args }
 function cl { clear }
 function DT { tee ~/Desktop/terminalOut.txt }
 function editpsrc { edit ~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1 }
 function editgitconfig { edit ~/.gitconfig }
 function f { explorer . }
 function flushDNS { ipconfig /flushdns }
+function ghce { gh copilot explain @args }
+function ghcs { gh copilot suggest @args }
 function gui { gradle-upgrade-interactive }
 function ipInfo { ipconfig /all }
+function jup { jupyter lab @args }
 function ll { ls }
 function myip { curl https://dynamicdns.park-your-domain.com/getip }
+function npmup { npm update -g }
 function path { Write-Host ($env:Path).Replace(";","`n") }
 function ws { cd $env:WORKSPACE }
 function ~ { cd ~ }
@@ -297,6 +305,39 @@ function gitgc() {
     git maintenance run --task gc
 }
 
+function gitall() {
+    Write-Host "Synching all git repos..."
+    gitsyncall
+
+    Write-Host "Pruning all git repos..."
+    gitpruneall
+
+    Write-Host "GCing all git repos..."
+    gitgcall
+}
+
+function gitbrall() {
+    Write-Host "Current git branches:"
+
+    foreach($repo in $gitRepos) {
+        Push-Location $repo
+        $branch = git branch --show-current
+        Write-Host "   - $branch in $repo"
+        Pop-Location
+    }
+}
+
+function gitcowt() {
+    param([string]$name)
+
+    git cowt $name
+    $wtPath = git wtpath $name
+
+    if($LASTEXITCODE -eq 0) {
+        cd $wtPath
+    }
+}
+
 function gitpruneall() {
     foreach($repo in $gitRepos) {
         Push-Location $repo
@@ -310,9 +351,41 @@ function gitpruneall() {
 }
 
 function gitprune() {
+    $worktreePaths = @()
+    $worktreeLabels = @()
+
+    git worktree list | Select-Object -Skip 1 | ForEach-Object {
+        $parts = $_ -split '\s+'
+        $wtPath = $parts[0]
+        $wtRef = ($parts[2..($parts.Length - 1)] -join ' ') -replace '^\[', '(' -replace '\]$', ')'
+        $worktreePaths += $wtPath
+        $worktreeLabels += "$wtPath $wtRef"
+    }
+
+    if($worktreePaths.Length -gt 0) {
+        Write-Host "`nWorktrees:"
+
+        foreach($label in $worktreeLabels) {
+            Write-Host "   $label"
+        }
+
+        Write-Host ""
+
+        $choice = $host.ui.PromptForChoice("Remove Worktrees?", "Are you sure you want to remove these worktrees?", $chooseYesOrNo, 1)
+
+        if($choice -eq 0) {
+            foreach($wtPath in $worktreePaths) {
+                git worktree remove $wtPath
+            }
+        }
+        else {
+            Write-Host "`nNo worktrees were removed."
+        }
+    }
+
     $branchNames = @()
 
-    git branch | grep -v '^*\|master\|main' | ForEach-Object {
+    git branch | Where-Object { $_ -notmatch '^\*|master|main' } | ForEach-Object {
         $branchNames += $_.Trim()
     }
 
@@ -320,7 +393,7 @@ function gitprune() {
         Write-Host "`nLocal branches:"
 
         foreach($branchName in $branchNames) {
-            Write-Host " $branchName"
+            Write-Host "   $branchName"
         }
 
         Write-Host ""
