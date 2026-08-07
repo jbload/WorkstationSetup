@@ -401,15 +401,21 @@ gitgcall () {
 
 gitprune () {
     local worktree_paths=()
+    local worktree_labels=()
 
-    git worktree list | tail -n +2 | awk '{print $1}' | while read -r wt_path
+    git worktree list | tail -n +2 | awk '{
+        ref=""; for(i=3;i<=NF;i++) ref=ref (i>3?" ":"") $i
+        gsub(/\[/,"(",ref); gsub(/\]/,")",ref)
+        print $1 "\t" ref
+    }' | while IFS=$'\t' read -r wt_path wt_ref
     do
         worktree_paths+=($wt_path)
+        worktree_labels+=("$wt_path $wt_ref")
     done
 
     if [ ${#worktree_paths[@]} -gt 0 ]; then
         echo "\nWorktrees:"
-        printf '   %s\n' "${worktree_paths[@]}"
+        printf '   %s\n' "${worktree_labels[@]}"
         echo ""
 
         if read -q "choice?Remove these worktrees? (y/n): "; then
