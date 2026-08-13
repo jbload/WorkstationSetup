@@ -61,6 +61,7 @@
 	pushf = pushup --force-with-lease
 	pushup = !git push -u origin HEAD
 	rb = "!f() { git isclean && git rebase ${1-origin/$(git default)}; }; f"
+	rbd = "!f() { git isclean && git fetch --prune origin && git rebase origin/$(git default); }; f"
 	rba = rebase --abort
 	rbc = !git add -A && git rebase --continue
 	rbi = rebase --interactive
@@ -143,6 +144,7 @@
 	pushf = Force-push with lease protection
 	pushup = Push the current branch and set its upstream
 	rb = Rebase onto the specified or default branch
+	rbd = Fetch and rebase onto the default branch
 	rba = Alias for 'git rebase --abort' - abort the current rebase
 	rbc = Stage changes and continue the current rebase
 	rbi = Alias for 'git rebase --interactive' - start an interactive rebase

@@ -373,9 +373,50 @@ gitbrall () {
     for repo in $GIT_REPOS
     do
         pushd $repo &> /dev/null
-        echo "   - $(git branch --show-current) in $repo"
+
+        local is_main=true
+
+        while IFS=$'\t' read -r wt_path wt_branch
+        do
+            wt_branch=${wt_branch#refs/heads/}
+
+            if $is_main; then
+                echo "   - $wt_branch in $wt_path"
+                is_main=false
+            else
+                echo "      - $wt_branch in $wt_path"
+            fi
+
+        done < <(git worktree list --porcelain | awk '
+            /^worktree / { path=substr($0, 10); branch="(detached)" }
+            /^branch / { branch=substr($0, 19) }
+            /^$/ { print path "\t" branch; path="" }
+            END { if (path != "") print path "\t" branch }
+        ')
+
         popd &> /dev/null
     done
+}
+
+gitworktreedirty () {
+    while IFS= read -r worktree_path
+    do
+        if [ -n "$(git -C "$worktree_path" status --porcelain)" ]; then
+            return 0
+        fi
+    done < <(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }')
+
+    return 1
+}
+
+gitworktreestatus () {
+    while IFS= read -r worktree_path
+    do
+        if [ -n "$(git -C "$worktree_path" status --porcelain)" ]; then
+            echo "git status: $worktree_path..."
+            git -C "$worktree_path" st
+        fi
+    done < <(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }')
 }
 
 gitcowt () {
@@ -474,10 +515,10 @@ gitstall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then
+        if gitworktreedirty; then
             echo "********************************************************************************"
             echo "git status: $repo..."
-            git st
+            gitworktreestatus
         else
             clean_repos+=($repo)
         fi
@@ -502,7 +543,7 @@ gitsyncall () {
     do
         pushd $repo &> /dev/null
 
-        if [ -n "$(git status --porcelain)" ]; then
+        if gitworktreedirty; then
             dirty_repos+=($repo)
         else
             echo "********************************************************************************"

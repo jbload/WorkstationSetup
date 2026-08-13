@@ -228,7 +228,7 @@ function gitsyncall() {
     foreach($repo in $gitRepos) {
         Push-Location $repo
 
-        if("$(git status --porcelain)".Length -gt 0) {
+        if(gitworktreedirty) {
             $dirtyRepos += $repo
         }
         else {
@@ -262,16 +262,41 @@ function gitsyncall() {
     }
 }
 
+function gitworktreedirty() {
+    $dirty = $false
+
+    git worktree list --porcelain | Where-Object { $_ -like 'worktree *' } | ForEach-Object {
+        $worktreePath = $_.Substring(9)
+
+        if("$(git -C $worktreePath status --porcelain)".Length -gt 0) {
+            $dirty = $true
+        }
+    }
+
+    return $dirty
+}
+
+function gitworktreestatus() {
+    git worktree list --porcelain | Where-Object { $_ -like 'worktree *' } | ForEach-Object {
+        $worktreePath = $_.Substring(9)
+
+        if("$(git -C $worktreePath status --porcelain)".Length -gt 0) {
+            Write-Host "git status: $worktreePath..."
+            git -C $worktreePath st
+        }
+    }
+}
+
 function gitstall() {
     $cleanRepos = @()
 
     foreach($repo in $gitRepos) {
         Push-Location $repo
 
-        if("$(git status --porcelain)".Length -gt 0) {
+        if(gitworktreedirty) {
             Write-Host "********************************************************************************"
             Write-Host "git status: $repo..."
-            git st
+            gitworktreestatus
         }
         else {
             $cleanRepos += $repo
@@ -321,8 +346,33 @@ function gitbrall() {
 
     foreach($repo in $gitRepos) {
         Push-Location $repo
-        $branch = git branch --show-current
-        Write-Host "   - $branch in $repo"
+
+        $isMain = $true
+
+        $wtPath = $null
+        $wtBranch = '(detached)'
+
+        git worktree list --porcelain | ForEach-Object {
+            if($_ -like 'worktree *') {
+                $wtPath = $_.Substring(9)
+                $wtBranch = '(detached)'
+            }
+            elseif($_ -like 'branch refs/heads/*') {
+                $wtBranch = $_.Substring(18)
+            }
+            elseif([string]::IsNullOrEmpty($_)) {
+                if($isMain) {
+                    Write-Host "   - $wtBranch in $wtPath"
+                    $isMain = $false
+                }
+                else {
+                    Write-Host "      - $wtBranch in $wtPath"
+                }
+
+                $wtPath = $null
+            }
+        }
+
         Pop-Location
     }
 }
