@@ -3,6 +3,11 @@
 - Default to short answers; let the user ask for more detail.
 - Prefer bulleted lists over walls of text where the content is list-like.
 
+## Intent Interpretation
+- Questions ("Should we do X?", "Are there other options for X?", "What would happen if X?") require a response so the user can decide — never take action on a question without an explicit follow-up directive.
+- Directives ("Do X", "Add X", "Update X") are requests to act — proceed without asking for confirmation.
+- When in doubt, treat the message as a question and respond before acting.
+
 ## Collaboration
 - When authoring commit messages and PR summaries, DO NOT include references to AI coding assistants (e.g., Codex, Claude Code, Copilot).
 - Commit subject lines (the first line) must not use conventional commit prefixes (`feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`, `ci:`, `style:`, `perf:`, `build:`, `revert:`). Write a plain sentence with normal casing — e.g., "Add request table schema support" not "feat: add request table schema support". The extended body below the subject line is unaffected by this rule.
