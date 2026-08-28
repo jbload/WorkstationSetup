@@ -398,13 +398,26 @@ gitbrall () {
     done
 }
 
+gitworktreepaths () {
+    git -C "${1:-.}" worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }'
+}
+
+gitworktreebranches () {
+    git -C "${1:-.}" worktree list --porcelain | awk '
+        /^worktree / { path=substr($0, 10); branch="" }
+        /^branch / { branch=substr($0, 19) }
+        /^$/ { if (path != "") print path "\t" branch; path="" }
+        END { if (path != "") print path "\t" branch }
+    '
+}
+
 gitworktreedirty () {
     while IFS= read -r worktree_path
     do
         if [ -n "$(git -C "$worktree_path" status --porcelain)" ]; then
             return 0
         fi
-    done < <(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }')
+    done < <(gitworktreepaths)
 
     return 1
 }
@@ -416,7 +429,7 @@ gitworktreestatus () {
             echo "git status: $worktree_path..."
             git -C "$worktree_path" st
         fi
-    done < <(git worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }')
+    done < <(gitworktreepaths)
 }
 
 gitcowt () {
@@ -537,44 +550,92 @@ gitstall () {
 }
 
 gitsyncall () {
-    local dirty_repos=()
+    GIT_SYNC_SKIPPED=()
 
     for repo in $GIT_REPOS
     do
-        pushd $repo &> /dev/null
-
-        if gitworktreedirty; then
-            dirty_repos+=($repo)
-        else
-            echo "********************************************************************************"
-            echo "Synching git repo: $repo..."
-            git up
-
-            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
-                git pushf
-            fi
-
-            git cod
-            git up
-
-            if [ $GIT_PUSH_DURING_SYNC -eq 1 ]; then
-                git pushf
-            fi
-
-            git co -
-        fi
-
-        popd &> /dev/null
+        echo "********************************************************************************"
+        echo "Synching git repo: $repo..."
+        gitsyncrepo "$repo"
     done
 
-    if [ ${#dirty_repos[@]} -gt 0 ]; then
-        echo "\nThe following repos were skipped because they had pending changes:"
+    gitsyncreport
+}
 
-        for dirty_repo in $dirty_repos
+gitsyncrepo () {
+    local repo=$1
+
+    git -C "$repo" fetch --prune origin || return 0
+
+    local default
+    default=$(git -C "$repo" symbolic-ref refs/remotes/origin/HEAD 2> /dev/null | sed 's@^refs/remotes/origin/@@')
+
+    if [ -z "$default" ]; then
+        gitsyncskip "$repo" "could not resolve the default branch"
+        return 0
+    fi
+
+    gitsyncdefault "$repo" "$default"
+
+    while IFS=$'\t' read -r worktree branch
+    do
+        if [ "$branch" != "$default" ]; then
+            gitsyncworktree "$worktree" "$branch"
+        fi
+    done < <(gitworktreebranches "$repo")
+}
+
+gitsyncreport () {
+    if [ ${#GIT_SYNC_SKIPPED[@]} -gt 0 ]; then
+        echo "\nThe following worktrees were skipped:"
+
+        for skipped in $GIT_SYNC_SKIPPED
         do
-            echo "   $dirty_repo"
+            echo "   $skipped"
         done
     fi
+}
+
+gitsyncdefault () {
+    local repo=$1
+    local default=$2
+    local worktree
+
+    worktree=$(gitworktreebranches "$repo" | awk -F'\t' -v branch="$default" '$2 == branch { print $1 }')
+
+    if [ -z "$worktree" ]; then
+        echo "Fast-forwarding $default..."
+        git -C "$repo" fetch origin "$default:$default"
+    elif [ -n "$(git -C "$worktree" status --porcelain)" ]; then
+        gitsyncskip "$worktree" "$default has pending changes"
+    else
+        echo "Fast-forwarding $default in $worktree..."
+        git -C "$worktree" merge --ff-only "origin/$default" && git -C "$worktree" submodule update --init --recursive
+    fi
+}
+
+gitsyncworktree () {
+    local worktree=$1
+    local branch=$2
+
+    if [ -z "$branch" ]; then
+        gitsyncskip "$worktree" "detached HEAD"
+    elif [ -n "$(git -C "$worktree" status --porcelain)" ]; then
+        gitsyncskip "$worktree" "$branch has pending changes"
+    elif ! git -C "$worktree" rev-parse --verify --quiet "@{u}" &> /dev/null; then
+        gitsyncskip "$worktree" "$branch has no upstream"
+    else
+        echo "Rebasing $branch in $worktree..."
+        git -C "$worktree" rebase "@{u}" && git -C "$worktree" submodule update --init --recursive
+
+        if [ "$GIT_PUSH_DURING_SYNC" -eq 1 ]; then
+            git -C "$worktree" pushf
+        fi
+    fi
+}
+
+gitsyncskip () {
+    GIT_SYNC_SKIPPED+=("$1 ($2)")
 }
 
 rmdss() {

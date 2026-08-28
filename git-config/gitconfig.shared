@@ -81,7 +81,7 @@
 	sync = !git pull --rebase && git push
 	undo = reset HEAD~1 --mixed
 	unstage = restore --staged
-	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	up = !git pull --rebase --prune && git submodule update --init --recursive
 	wip = !git add -u && git commit -m "WIP"
 	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
 	wt = worktree

@@ -223,52 +223,145 @@ function mcd() {
 }
 
 function gitsyncall() {
-    $dirtyRepos = @()
+    $script:gitSyncSkipped = @()
 
     foreach($repo in $gitRepos) {
-        Push-Location $repo
-
-        if(gitworktreedirty) {
-            $dirtyRepos += $repo
-        }
-        else {
-            Write-Host "********************************************************************************"
-            Write-Host "Synching git repo: $repo..."
-            git up
-
-            if($gitPushDuringSync) {
-                git pushf
-            }
-
-            git cod
-            git up
-
-            if($gitPushDuringSync) {
-                git pushf
-            }
-
-            git co -
-        }
-
-        Pop-Location
+        Write-Host "********************************************************************************"
+        Write-Host "Synching git repo: $repo..."
+        gitsyncrepo $repo
     }
 
-    if($dirtyRepos.Length -gt 0) {
-        Write-Host "`nThe following repos were skipped because they had pending changes:"
+    gitsyncreport
+}
 
-        foreach($dirtyRepo in $dirtyRepos) {
-            Write-Host "   $dirtyRepo"
+function gitsyncrepo() {
+    param([string]$repo)
+
+    git -C $repo fetch --prune origin
+
+    if($LASTEXITCODE -ne 0) {
+        return
+    }
+
+    $default = (git -C $repo symbolic-ref refs/remotes/origin/HEAD) -replace '^refs/remotes/origin/', ''
+
+    if([string]::IsNullOrEmpty($default)) {
+        gitsyncskip $repo "could not resolve the default branch"
+        return
+    }
+
+    gitsyncdefault $repo $default
+
+    foreach($worktree in (gitworktreebranches $repo)) {
+        if($worktree.Branch -ne $default) {
+            gitsyncworktree $worktree.Path $worktree.Branch
         }
+    }
+}
+
+function gitsyncreport() {
+    if($script:gitSyncSkipped.Length -gt 0) {
+        Write-Host "`nThe following worktrees were skipped:"
+
+        foreach($skipped in $script:gitSyncSkipped) {
+            Write-Host "   $skipped"
+        }
+    }
+}
+
+function gitsyncdefault() {
+    param([string]$repo, [string]$default)
+
+    $worktree = (gitworktreebranches $repo | Where-Object { $_.Branch -eq $default } | Select-Object -First 1).Path
+
+    if([string]::IsNullOrEmpty($worktree)) {
+        Write-Host "Fast-forwarding $default..."
+        git -C $repo fetch origin "$($default):$($default)"
+    }
+    elseif("$(git -C $worktree status --porcelain)".Length -gt 0) {
+        gitsyncskip $worktree "$default has pending changes"
+    }
+    else {
+        Write-Host "Fast-forwarding $default in $worktree..."
+        git -C $worktree merge --ff-only "origin/$default"
+
+        if($LASTEXITCODE -eq 0) {
+            git -C $worktree submodule update --init --recursive
+        }
+    }
+}
+
+function gitsyncworktree() {
+    param([string]$worktree, [string]$branch)
+
+    git -C $worktree rev-parse --verify --quiet "@{u}" 2>$null | Out-Null
+    $hasUpstream = $LASTEXITCODE -eq 0
+
+    if([string]::IsNullOrEmpty($branch)) {
+        gitsyncskip $worktree "detached HEAD"
+    }
+    elseif("$(git -C $worktree status --porcelain)".Length -gt 0) {
+        gitsyncskip $worktree "$branch has pending changes"
+    }
+    elseif(-not $hasUpstream) {
+        gitsyncskip $worktree "$branch has no upstream"
+    }
+    else {
+        Write-Host "Rebasing $branch in $worktree..."
+        git -C $worktree rebase "@{u}"
+
+        if($LASTEXITCODE -eq 0) {
+            git -C $worktree submodule update --init --recursive
+        }
+
+        if($gitPushDuringSync) {
+            git -C $worktree pushf
+        }
+    }
+}
+
+function gitsyncskip() {
+    param([string]$worktree, [string]$reason)
+
+    $script:gitSyncSkipped += "$worktree ($reason)"
+}
+
+function gitworktreepaths() {
+    param([string]$repo = '.')
+
+    git -C $repo worktree list --porcelain | Where-Object { $_ -like 'worktree *' } | ForEach-Object { $_.Substring(9) }
+}
+
+function gitworktreebranches() {
+    param([string]$repo = '.')
+
+    $wtPath = $null
+    $wtBranch = ''
+
+    git -C $repo worktree list --porcelain | ForEach-Object {
+        if($_ -like 'worktree *') {
+            $wtPath = $_.Substring(9)
+            $wtBranch = ''
+        }
+        elseif($_ -like 'branch refs/heads/*') {
+            $wtBranch = $_.Substring(18)
+        }
+        elseif([string]::IsNullOrEmpty($_) -and $wtPath) {
+            [pscustomobject]@{ Path = $wtPath; Branch = $wtBranch }
+            $wtPath = $null
+        }
+    }
+
+    if($wtPath) {
+        [pscustomobject]@{ Path = $wtPath; Branch = $wtBranch }
     }
 }
 
 function gitworktreedirty() {
     $dirty = $false
 
-    git worktree list --porcelain | Where-Object { $_ -like 'worktree *' } | ForEach-Object {
-        $worktreePath = $_.Substring(9)
-
-        if("$(git -C $worktreePath status --porcelain)".Length -gt 0) {
+    gitworktreepaths | ForEach-Object {
+        if("$(git -C $_ status --porcelain)".Length -gt 0) {
             $dirty = $true
         }
     }
@@ -277,12 +370,10 @@ function gitworktreedirty() {
 }
 
 function gitworktreestatus() {
-    git worktree list --porcelain | Where-Object { $_ -like 'worktree *' } | ForEach-Object {
-        $worktreePath = $_.Substring(9)
-
-        if("$(git -C $worktreePath status --porcelain)".Length -gt 0) {
-            Write-Host "git status: $worktreePath..."
-            git -C $worktreePath st
+    gitworktreepaths | ForEach-Object {
+        if("$(git -C $_ status --porcelain)".Length -gt 0) {
+            Write-Host "git status: $_..."
+            git -C $_ st
         }
     }
 }
