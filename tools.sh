@@ -25,6 +25,9 @@ INSTALLERS=(
   git_gui_apps                install_git_gui_apps
   pair_programming            install_pair_programming_tools
 
+  # File transfer
+  file_transfer_cyberduck     install_file_transfer_cyberduck
+
   # Development stacks
   python_stack                install_dev_stack_python
   node_stack                  install_dev_stack_node
@@ -153,6 +156,10 @@ install_git_gui_apps() {
 
 install_pair_programming_tools() {
   brew install git-duet/tap/git-duet
+}
+
+install_file_transfer_cyberduck() {
+  brew install --cask cyberduck
 }
 
 install_dev_stack_python() {
