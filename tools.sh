@@ -1,6 +1,8 @@
 #!/bin/zsh
 
 SCRIPT_DIR="${0:A:h}"
+PYTHON_VERSION=3.14
+NODE_VERSION=26
 
 typeset -A INSTALLERS
 INSTALLERS=(
@@ -18,12 +20,10 @@ INSTALLERS=(
   terminals_iterm2            install_terminals_iterm2
   terminals_warp              install_terminals_warp
 
-  # JetBrains
-  jetbrains                   install_jetbrains
-
-  # Git tools
-  git_gui_apps                install_git_gui_apps
-  pair_programming            install_pair_programming_tools
+  # Development tools
+  dev_tools_jetbrains         install_dev_tools_jetbrains
+  dev_tools_git_gui           install_dev_tools_git_gui
+  dev_tools_git_duet          install_dev_tools_git_duet
 
   # File transfer
   file_transfer_cyberduck     install_file_transfer_cyberduck
@@ -47,12 +47,12 @@ INSTALLERS=(
   cloud_azure_cli             install_cloud_azure_cli
   cloud_aws_cli               install_cloud_aws_cli
 
-  # Databases & messaging
-  kafka                       install_kafka
-  mysql                       install_mysql
-  mysql_client                install_mysql_client
-  rabbitmq                    install_rabbitmq
-  redis                       install_redis
+  # Data
+  data_kafka                  install_data_kafka
+  data_mysql                  install_data_mysql
+  data_mysql_client           install_data_mysql_client
+  data_rabbitmq               install_data_rabbitmq
+  data_redis                  install_data_redis
 
   # AI Development tools
   ai_dev_github_copilot       install_ai_dev_github_copilot
@@ -82,31 +82,34 @@ INSTALLERS=(
 )
 
 install_essentials() {
-  brew install --cask appcleaner
-  brew install --cask beyond-compare
-  brew install --cask font-cascadia-code
-  brew install --cask font-cascadia-code-pl
-  brew install --cask font-cascadia-mono
-  brew install --cask font-cascadia-mono-pl
-  brew install --cask postman
-  brew install --cask powershell
-  brew install --cask rectangle
-  brew install bat
-  brew install coreutils
-  brew install direnv
-  brew install fd
-  brew install git
-  brew install git-lfs
-  brew install gh
-  brew install httpie
-  brew install jq
-  brew install ripgrep
-  brew install shellcheck
-  brew install shfmt
-  brew install swagger-codegen
-  brew install tmux
-  brew install vim
-  brew install yq
+  brew install --cask \
+    appcleaner \
+    beyond-compare \
+    font-cascadia-code \
+    font-cascadia-code-pl \
+    font-cascadia-mono \
+    font-cascadia-mono-pl \
+    postman \
+    powershell \
+    rectangle
+
+  brew install \
+    bat \
+    coreutils \
+    direnv \
+    fd \
+    git \
+    git-lfs \
+    gh \
+    httpie \
+    jq \
+    ripgrep \
+    shellcheck \
+    shfmt \
+    swagger-codegen \
+    tmux \
+    vim \
+    yq
 }
 
 install_editors_sublime() {
@@ -146,15 +149,15 @@ install_terminals_warp() {
   brew install --cask warp
 }
 
-install_jetbrains() {
+install_dev_tools_jetbrains() {
   brew install --cask jetbrains-toolbox
 }
 
-install_git_gui_apps() {
+install_dev_tools_git_gui() {
   brew install --cask sourcetree
 }
 
-install_pair_programming_tools() {
+install_dev_tools_git_duet() {
   brew install git-duet/tap/git-duet
 }
 
@@ -163,15 +166,19 @@ install_file_transfer_cyberduck() {
 }
 
 install_dev_stack_python() {
-  brew install pyenv
-  brew install pyenv-virtualenv
-  pyenv install 3.12 && pyenv global 3.12
-  brew install jupyterlab
-  brew install uv
+  brew install \
+    pyenv \
+    pyenv-virtualenv
+
+  pyenv install "$PYTHON_VERSION" && pyenv global "$PYTHON_VERSION"
+
+  brew install \
+    jupyterlab \
+    uv
 }
 
 install_dev_stack_node() {
-  brew install node@22 && brew link --overwrite node@22
+  brew install "node@$NODE_VERSION" && brew link --overwrite "node@$NODE_VERSION"
 }
 
 install_dev_stack_angular() {
@@ -186,10 +193,13 @@ install_dev_stack_react() {
 
 install_dev_stack_java() {
   brew install --cask temurin
-  brew install gradle
-  brew install liquibase
-  brew install maven
-  brew install prettier
+
+  brew install \
+    gradle \
+    liquibase \
+    maven \
+    prettier
+
   npm install gradle-upgrade-interactive -g
 }
 
@@ -203,11 +213,15 @@ install_dev_stack_dotnet() {
 }
 
 install_dev_stack_ios() {
-  brew install carthage
-  brew install fastlane
+  brew install \
+    carthage \
+    fastlane
+
   brew install --cask sf-symbols
-  brew install swift-format
-  brew install xcbeautify
+
+  brew install \
+    swift-format \
+    xcbeautify
 }
 
 install_docker() {
@@ -215,9 +229,10 @@ install_docker() {
 }
 
 install_kubernetes_cli() {
-  brew install helm
-  brew install kubectx
-  brew install kubernetes-cli
+  brew install \
+    helm \
+    kubectx \
+    kubernetes-cli
 }
 
 install_microk8s() {
@@ -232,24 +247,24 @@ install_cloud_azure_cli() {
   brew install azure-cli
 }
 
-install_kafka() {
+install_data_kafka() {
   brew install kafka
 }
 
-install_mysql_client() {
+install_data_mysql_client() {
   brew install mysql-client
 }
 
-install_mysql() {
+install_data_mysql() {
   brew install mysql
-  install_mysql_client
+  install_data_mysql_client
 }
 
-install_rabbitmq() {
+install_data_rabbitmq() {
   brew install rabbitmq
 }
 
-install_redis() {
+install_data_redis() {
   brew install redis
 }
 
@@ -352,37 +367,41 @@ install_home_machine() {
   install_editors_vscode
   install_editors_zed
   install_essentials
-  install_jetbrains
+  install_dev_tools_jetbrains
   install_kubernetes_cli
-  install_mysql_client
+  install_data_mysql_client
   install_terminals_cmux
   install_terminals_ghostty
   install_terminals_iterm2
   install_terminals_warp
 
-  brew install --cask downie
-  brew install --cask guitar-pro
-  brew install --cask iina
-  brew install --cask imazing
-  brew install --cask microsoft-remote-desktop
-  brew install --cask musescore
-  brew install --cask permute
-  brew install --cask plex
+  brew install --cask \
+    downie \
+    guitar-pro \
+    iina \
+    imazing \
+    microsoft-remote-desktop \
+    musescore \
+    permute \
+    plex
 
   brew install getsentry/tools/sentry-cli
 }
 
 install_home_machine_optionals() {
-  brew install --cask calibre
-  brew install --cask discord
-  brew install --cask drawio
-  brew install --cask google-earth-pro
-  brew install --cask miro
-  brew install --cask orbstack
-  brew install --cask slack
-  brew install --cask zoom
-  brew install ffmpeg
-  brew install terraform
+  brew install --cask \
+    calibre \
+    discord \
+    drawio \
+    google-earth-pro \
+    miro \
+    orbstack \
+    slack \
+    zoom
+
+  brew install \
+    ffmpeg \
+    terraform
 }
 
 install_work_machine() {
@@ -392,7 +411,7 @@ install_work_machine() {
   install_editors_sublime
   install_editors_vscode
   install_essentials
-  install_jetbrains
+  install_dev_tools_jetbrains
   install_terminals_cmux
   install_terminals_ghostty
   install_terminals_iterm2
