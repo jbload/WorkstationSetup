@@ -179,7 +179,6 @@
     	ui = auto
 [core]
 	editor = code --wait
-	hooksPath = ~/git-hooks
 [diff]
 	algorithm = histogram
 	colorMoved = plain
@@ -193,12 +192,10 @@
 	prune = true
 [help]
 	autocorrect = prompt
-[http]
-	postBuffer = 524288000
 [init]
 	defaultBranch = master
-	templateDir = ~/git-templates
 [merge]
+	conflictStyle = zdiff3
 	tool = bc
 [mergetool]
 	keepBackup = false
