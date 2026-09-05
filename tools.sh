@@ -3,6 +3,7 @@
 SCRIPT_DIR="${0:A:h}"
 PYTHON_VERSION=3.14
 NODE_VERSION=26
+JAVA_VERSION=25
 
 typeset -A INSTALLERS
 INSTALLERS=(
@@ -192,7 +193,7 @@ install_dev_stack_react() {
 }
 
 install_dev_stack_java() {
-  brew install --cask temurin
+  brew install --cask "temurin@$JAVA_VERSION"
 
   brew install \
     gradle \
