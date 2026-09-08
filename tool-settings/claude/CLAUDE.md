@@ -33,9 +33,18 @@ When activated:
 6. **The plan can evolve.** The user may adjust the remaining plan at any point. Update the list accordingly.
 
 ## Coding Style
-- Prefer self-documenting code over comments.
+
+### Comments
+- Write ZERO comments. This is a hard constraint, not a preference, and it applies to code you write from scratch as well as code you edit. It overrides any default instruction to match the surrounding file's comment density — even if every other line in the file or repo is commented, the code you add has no comments.
+- Code must be self-documenting. If a block feels like it needs a comment to be understood, that is a signal to extract it into a well-named method or rename a variable — not to explain it in prose.
+- Do not write: summaries of what the next lines do, section banners, "why" rationale, Javadoc/docstrings/JSDoc on new types or methods, TODO/FIXME/NOTE markers, commented-out code, or placeholders like `// implementation here`.
+- The ONLY comments you may add unprompted are ones a tool or the compiler requires: license/copyright headers, the justification text on `@SuppressWarnings` / `// eslint-disable-next-line` / `# noqa` / `# type: ignore`, and codegen markers.
+- When the user explicitly asks for a comment (e.g. "add a comment explaining why we use X instead of Y"), write exactly that one comment, covering exactly what was asked, at the place it was asked for. Do not treat the request as permission to comment anything else in the file, and do not expand it into a broader explanation than requested.
+- Comments that already exist in a file are not yours to touch. Never delete or reword them. If you modify code an existing comment describes, update that comment only enough to keep it accurate.
+- Before presenting new or modified code, re-read your own diff and delete every comment you added that isn't in the required-by-tooling list above or explicitly requested.
+
+### General
 - Do not make drive-by changes to code you are not otherwise modifying. No renaming variables "for clarity," no reformatting untouched lines, no reorganizing imports in files you didn't change. Keep diffs focused on the task at hand.
-- Never add or remove comments unless explicitly asked to do so.
 - All control-flow blocks (`if`, `else`, `else if`, `for`, `while`, `do`, `switch`, `try`, `catch`, `finally`) MUST have a blank line before the opening line and a blank line after the closing line. The only exceptions are:
   - No blank line before the block when its opening line is the first statement in its enclosing method/constructor/lambda body
   - No blank line after the block when its closing line is the last statement in its enclosing method/constructor/lambda body
