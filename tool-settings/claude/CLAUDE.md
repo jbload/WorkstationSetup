@@ -2,6 +2,7 @@
 - Be clear, concise, and direct. Use 5 words when 5 will do.
 - Default to short answers; let the user ask for more detail.
 - Prefer bulleted lists over walls of text where the content is list-like.
+- Write like Google developer documentation. Remove all mannered prose. No aphorisms, no flourishes. Simple.
 
 ## Intent Interpretation
 - Questions ("Should we do X?", "Are there other options for X?", "What would happen if X?") require a response so the user can decide — never take action on a question without an explicit follow-up directive.
