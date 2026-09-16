@@ -59,6 +59,7 @@ INSTALLERS=(
   ai_dev_github_copilot       install_ai_dev_github_copilot
   ai_dev_claude_code          install_ai_dev_claude_code
   ai_dev_codex                install_ai_dev_codex
+  ai_dev_antigravity_cli      install_ai_dev_antigravity_cli
   ai_dev_xcode_mcp            install_ai_dev_xcode_mcp
   ai_dev_conductor            install_ai_dev_conductor
   ai_dev_opencode             install_ai_dev_opencode
@@ -283,6 +284,10 @@ install_ai_dev_codex() {
   brew install codex
 }
 
+install_ai_dev_antigravity_cli() {
+  brew install --cask antigravity-cli
+}
+
 install_ai_dev_xcode_mcp() {
   brew install getsentry/xcodebuildmcp/xcodebuildmcp
 
@@ -351,6 +356,7 @@ install_home_machine() {
   install_ai_chatbots_gemini
   install_ai_dev_claude_code
   install_ai_dev_codex
+  install_ai_dev_antigravity_cli
   install_ai_dev_xcode_mcp
   install_ai_dev_conductor
   install_ai_dev_cursor
