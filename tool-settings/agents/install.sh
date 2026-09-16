@@ -7,14 +7,11 @@ main() {
   script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
   local shared_file="${script_dir}/AGENTS.md"
   local display_path
-  local import_path
 
   if [[ "$shared_file" == "$HOME"* ]]; then
     display_path="~${shared_file#"$HOME"}"
-    import_path="../${shared_file#"$HOME"/}"
   else
     display_path="$shared_file"
-    import_path="$shared_file"
   fi
 
   local selected_agents
@@ -26,7 +23,7 @@ main() {
   fi
 
   while IFS= read -u 3 -r agent; do
-    install_agent "$agent" "$script_dir" "$shared_file" "$import_path" "$display_path"
+    install_agent "$agent" "$script_dir" "$shared_file" "$display_path"
   done 3<<< "$selected_agents"
 }
 
@@ -78,15 +75,14 @@ install_agent() {
   local agent="$1"
   local script_dir="$2"
   local shared_file="$3"
-  local import_path="$4"
-  local display_path="$5"
+  local display_path="$4"
 
   case "$agent" in
     Claude)
-      install_claude "$script_dir" "$shared_file" "$import_path" "$display_path"
+      install_claude "$script_dir" "$shared_file" "$display_path"
       ;;
     Gemini)
-      install_gemini "$shared_file" "$import_path" "$display_path"
+      install_gemini "$shared_file" "$display_path"
       ;;
     Codex)
       install_codex "$shared_file" "$display_path"
@@ -97,19 +93,17 @@ install_agent() {
 install_claude() {
   local script_dir="$1"
   local shared_file="$2"
-  local import_path="$3"
-  local display_path="$4"
+  local display_path="$3"
 
   install_claude_assets "$script_dir"
-  ensure_imported_rule_file "$HOME/.claude/CLAUDE.md" "$shared_file" "$import_path" "$display_path"
+  ensure_imported_rule_file "$HOME/.claude/CLAUDE.md" "$shared_file" "$display_path"
 }
 
 install_gemini() {
   local shared_file="$1"
-  local import_path="$2"
-  local display_path="$3"
+  local display_path="$2"
 
-  ensure_imported_rule_file "$HOME/.gemini/GEMINI.md" "$shared_file" "$import_path" "$display_path"
+  ensure_imported_rule_file "$HOME/.gemini/GEMINI.md" "$shared_file" "$display_path"
 
   if [ -d "$HOME/.gemini/config" ]; then
     ln -sf "$HOME/.gemini/GEMINI.md" "$HOME/.gemini/config/GEMINI.md"
@@ -150,8 +144,7 @@ install_claude_assets() {
 ensure_imported_rule_file() {
   local target_file="$1"
   local shared_file="$2"
-  local import_path="$3"
-  local display_path="$4"
+  local display_path="$3"
   local file_name
   file_name="$(basename "$target_file")"
 
@@ -159,20 +152,20 @@ ensure_imported_rule_file() {
     local first_line
     first_line="$(head -n 1 "$target_file")"
 
-    if [[ "$first_line" == *"@import"* && ("$first_line" == *"$import_path"* || "$first_line" == *"$shared_file"* || "$first_line" == *"$display_path"*) ]]; then
+    if [[ "$first_line" == *"@import"* && ("$first_line" == *"$shared_file"* || "$first_line" == *"$display_path"*) ]]; then
       echo "Global ${file_name} file has already imported ${display_path}."
     else
       local tmp_file
       tmp_file="$(mktemp)"
-      printf '%s\n' "@import ${import_path}" > "$tmp_file"
+      printf '%s\n' "@import ${shared_file}" > "$tmp_file"
       cat "$target_file" >> "$tmp_file"
       mv "$tmp_file" "$target_file"
 
-      echo "Added '@import ${import_path}' to the global ${file_name} file."
+      echo "Added '@import ${shared_file}' to the global ${file_name} file."
     fi
   else
     mkdir -p "$(dirname "$target_file")"
-    printf '%s\n\n' "@import ${import_path}" > "$target_file"
+    printf '%s\n\n' "@import ${shared_file}" > "$target_file"
 
     echo "Global ${file_name} file does not exist. Creating a new ${file_name} file that imports ${display_path}."
   fi
