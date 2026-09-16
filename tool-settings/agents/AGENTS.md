@@ -62,3 +62,10 @@ When activated:
 
 ## Tool Settings
 - Prefer saving allowed permissions to the user-level settings file over the project local settings file.
+
+## Build Commands
+- User-level rules allow direct xcodebuild commands.
+- Start Xcode builds directly with the required filesystem access for Xcode and SwiftPM caches. Do not make an initial sandboxed build attempt that is expected to fail before rerunning the direct build.
+- When running xcodebuild, call it directly as the executable, e.g. `xcodebuild -scheme App -sdk iphonesimulator build`.
+- Do not wrap xcodebuild in `/bin/zsh -lc`, shell redirection, or pipelines such as `2>&1 | grep` or `2>&1 | rg` unless the user explicitly asks for that exact shell command. Those wrappers do not match the broad xcodebuild approval rule and can trigger approval prompts.
+- Use Xcode MCP build/log tools when available. For shell fallback, use direct `xcodebuild`; use `-quiet` for compact output when needed.
