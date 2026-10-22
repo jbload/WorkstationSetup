@@ -62,6 +62,10 @@ When activated:
 - Before presenting new or substantially rewritten code, re-read each method you wrote and confirm you can narrate its body as a sequence of steps. If any method mixes orchestration with inline computation, extract before presenting — do not ship it and offer to clean up later.
 - Avoid multiple return statements within a method. A single early-return guard clause at the top of a method is acceptable only when the remaining body is non-trivial (multiple statements). When the entire method reduces to two returns, always collapse them into a ternary instead. Multiple returns scattered through a longer body are not acceptable — use a ternary for simple conditionals, or restructure so there is one return at the end.
 
+### Java
+- Prefer Immutables (org.immutables) over Java records for value types. Do not introduce `record` types.
+- Import Immutables annotations directly and use the simple names (`@Immutable`, `@Default`, `@Derived`, etc.). Never qualify them as `@Value.Immutable`, `@Value.Default`, etc.
+
 ## Git Operations
 - Safe read-only git commands such as git status, git diff, git log, git show, git branch --show-current, git rev-parse, and git ls-tree may be run when needed to inspect repository state.
 - Do not offer or suggest git operations.
