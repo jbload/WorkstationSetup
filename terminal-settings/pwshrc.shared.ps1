@@ -194,6 +194,23 @@ function f { explorer . }
 function flushDNS { ipconfig /flushdns }
 function ghce { gh copilot explain @args }
 function ghcs { gh copilot suggest @args }
+function ghsa { gh stack add @args }
+function ghsb { gh stack bottom @args }
+function ghsd { gh stack down @args }
+function ghsi { gh stack init @args }
+function ghsk { gh stack trunk @args }
+function ghsp { gh stack push @args }
+function ghsr { gh stack rebase @args }
+function ghsra { gh stack rebase --abort @args }
+function ghsrc { gh stack rebase --continue @args }
+function ghsru { gh stack rebase --upstack @args }
+function ghss { gh stack submit @args }
+function ghst { gh stack top @args }
+function ghsu { gh stack up @args }
+function ghsv { gh stack view @args }
+function ghsvs { gh stack view --short @args }
+function ghsw { gh stack switch @args }
+function ghsy { gh stack sync --prune @args }
 function gui { gradle-upgrade-interactive }
 function ipInfo { ipconfig /all }
 function jup { jupyter lab @args }
