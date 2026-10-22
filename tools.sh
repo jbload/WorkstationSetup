@@ -25,6 +25,7 @@ INSTALLERS=(
   dev_tools_jetbrains         install_dev_tools_jetbrains
   dev_tools_git_gui           install_dev_tools_git_gui
   dev_tools_git_duet          install_dev_tools_git_duet
+  dev_tools_gh_stack          install_dev_tools_gh_stack
 
   # File transfer
   file_transfer_cyberduck     install_file_transfer_cyberduck
@@ -161,6 +162,11 @@ install_dev_tools_git_gui() {
 
 install_dev_tools_git_duet() {
   brew install git-duet/tap/git-duet
+}
+
+install_dev_tools_gh_stack() {
+  gh extension install github/gh-stack
+  gh skill install github/gh-stack
 }
 
 install_file_transfer_cyberduck() {
@@ -374,6 +380,7 @@ install_home_machine() {
   install_editors_vscode
   install_editors_zed
   install_essentials
+  install_dev_tools_gh_stack
   install_dev_tools_jetbrains
   install_kubernetes_cli
   install_data_mysql_client
@@ -418,6 +425,7 @@ install_work_machine() {
   install_editors_sublime
   install_editors_vscode
   install_essentials
+  install_dev_tools_gh_stack
   install_dev_tools_jetbrains
   install_terminals_cmux
   install_terminals_ghostty
